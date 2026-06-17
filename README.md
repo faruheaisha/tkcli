@@ -115,6 +115,14 @@ Run `tk sync` anytime your project structure changes and the managed region upda
 to reflect reality — so your AI agent never reads a stale or hallucinated layout.
 Your Project Notes are always preserved.
 
+## Smart defaults that learn from you
+
+tk remembers the choices you make and offers them as defaults next time. Scaffold
+Express a few times and `tk quick` will default to Express; keep skipping `npm install`
+and it stops asking. This lives in a local `~/.config/toolkit/profile.json` — it is
+**never transmitted anywhere**. Delete the file to reset, or pass explicit flags
+(`--stack`, `--no-install`, …) to override the learned defaults anytime.
+
 ## Install
 
 ```bash

@@ -10,7 +10,15 @@ export interface PromptAnswers {
   installDeps: boolean;
 }
 
-export async function runPrompt(): Promise<PromptAnswers> {
+/** Learned defaults from the local usage profile, applied to the interactive prompts. */
+export interface PromptDefaults {
+  stack?: string;
+  includeAi?: boolean;
+  initGit?: boolean;
+  installDeps?: boolean;
+}
+
+export async function runPrompt(defaults: PromptDefaults = {}): Promise<PromptAnswers> {
   const { default: inquirer } = await import('inquirer');
   const answers = await inquirer.prompt<PromptAnswers>([
     {
@@ -35,6 +43,7 @@ export async function runPrompt(): Promise<PromptAnswers> {
       type: 'list',
       name: 'stack',
       message: 'Select stack:',
+      default: defaults.stack,
       choices: STACKS.map((s) => ({
         name: `${s.label} - ${s.description}`,
         value: s.id,
@@ -44,19 +53,19 @@ export async function runPrompt(): Promise<PromptAnswers> {
       type: 'confirm',
       name: 'includeAi',
       message: 'Add AI context files (CLAUDE.md, .editorconfig, CI)?',
-      default: true,
+      default: defaults.includeAi ?? true,
     },
     {
       type: 'confirm',
       name: 'initGit',
       message: 'Initialize Git repository?',
-      default: true,
+      default: defaults.initGit ?? true,
     },
     {
       type: 'confirm',
       name: 'installDeps',
       message: 'Install dependencies now?',
-      default: (answers: PromptAnswers) => getStack(answers.stack)?.needsNpmInstall ?? false,
+      default: (answers: PromptAnswers) => defaults.installDeps ?? (getStack(answers.stack)?.needsNpmInstall ?? false),
     },
   ]);
 

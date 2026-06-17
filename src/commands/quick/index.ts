@@ -6,6 +6,7 @@ import { runPrompt } from './prompt.js';
 import { composePrompt } from './compose-prompt.js';
 import { logger } from '../../logger.js';
 import { getDevCommand } from './dev-command.js';
+import { getPreferredStack, getOptionDefaults, recordUsage } from '../../profile.js';
 
 export const quickCommand = new Command('quick')
   .description('Scaffold an AI-ready project in seconds')
@@ -53,11 +54,14 @@ Example:
         addons: string[] | undefined;
       };
 
+      // Learned default stack from local usage history (privacy: never transmitted).
+      const preferredStack = getPreferredStack();
+
       if (projectName) {
         opts = {
           projectName,
           description: (options.description as string) || '',
-          stack: (options.stack as string) || 'node-ts',
+          stack: (options.stack as string) || preferredStack || 'node-ts',
           includeAi: options.ai !== false,
           initGit: options.git !== false,
           installDeps: options.install !== false,
@@ -69,7 +73,7 @@ Example:
         opts = {
           projectName: inferredName,
           description: (options.description as string) || '',
-          stack: (options.stack as string) || 'node-ts',
+          stack: (options.stack as string) || preferredStack || 'node-ts',
           includeAi: options.ai !== false,
           initGit: options.git !== false,
           installDeps: options.install !== false,
@@ -82,7 +86,13 @@ Example:
           answersComponents = await composePrompt();
         }
 
-        const answers = await runPrompt();
+        const learned = getOptionDefaults();
+        const answers = await runPrompt({
+          stack: preferredStack,
+          includeAi: learned.includeAi,
+          initGit: learned.initGit,
+          installDeps: learned.installDeps,
+        });
 
         opts = {
           projectName: answers.projectName,
@@ -120,6 +130,17 @@ Example:
         components: opts.components,
         addons: opts.addons,
       });
+
+      // Learn from this scaffold so future runs default to your habits (local only).
+      if (!options.dryRun) {
+        recordUsage({
+          stack: opts.stack,
+          initGit: opts.initGit,
+          installDeps: opts.installDeps,
+          includeAi: opts.includeAi,
+          addons: opts.addons,
+        });
+      }
     } catch (err) {
       logger.error(`Failed: ${err instanceof Error ? err.message : String(err)}`);
       process.exit(1);
