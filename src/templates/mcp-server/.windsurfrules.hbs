@@ -1,0 +1,14 @@
+# {{projectName}}
+
+> {{description}}
+
+## Windsurf AI Development Rules
+
+### Stack: {{stack}}
+
+- MCP server over stdio, built on `@modelcontextprotocol/sdk`
+- ESM, bin entry with shebang; clients run `dist/index.js`
+- NEVER write to stdout — it's the protocol channel. Log to stderr.
+- Tool logic + zod schemas in `src/tools.ts`; wiring in `src/index.ts`
+- Tools return `{ content: [...] }`; inputs validated by zod `inputSchema`
+- Test: Vitest against the pure tool functions

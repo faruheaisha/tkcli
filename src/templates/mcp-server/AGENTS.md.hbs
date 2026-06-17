@@ -1,0 +1,28 @@
+# {{projectName}}
+
+{{description}}
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Run the server with tsx (stdio) |
+| `npm run build` | Compile TypeScript to `dist/` |
+| `npm start` | Run the compiled server |
+| `npm run inspect` | Launch the MCP Inspector against `dist/index.js` |
+| `npm test` | Run tests (Vitest) |
+| `npm run lint` | Lint with ESLint |
+
+## Architecture
+
+A Model Context Protocol server over **stdio**, built on `@modelcontextprotocol/sdk`:
+
+- **src/index.ts** — creates `McpServer`, registers tools, connects `StdioServerTransport`
+- **src/tools.ts** — tool logic as pure functions + zod input schemas
+
+Key rules:
+
+- **Never write to stdout** — it is the MCP protocol channel. Log to stderr (`console.error`).
+- Tools return `{ content: [{ type: 'text', text: ... }] }`, not raw values.
+- Inputs are validated against the zod `inputSchema` declared at registration.
+- Keep tool logic in `tools.ts` (testable); keep `index.ts` to wiring only.

@@ -10,7 +10,7 @@ function tmpDir(): string {
 
 const STACKS = [
   'node-ts', 'react-spa', 'vue', 'nuxt', 'express',
-  'fastapi', 'nextjs', 'rust', 'go', 'flutter', 'cli-ts', 'python',
+  'fastapi', 'nextjs', 'rust', 'go', 'flutter', 'cli-ts', 'python', 'mcp-server',
 ];
 
 /** Parse the ASCII tree inside a CLAUDE.md managed "Project Structure" block into relative paths. */

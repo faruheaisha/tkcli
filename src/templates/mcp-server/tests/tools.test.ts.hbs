@@ -1,0 +1,15 @@
+import { describe, it, expect } from 'vitest';
+import { greet, greetInputSchema } from '../src/tools.js';
+
+describe('greet tool', () => {
+  it('greets by name', () => {
+    expect(greet('Ada')).toContain('Hello, Ada!');
+  });
+
+  it('exposes a zod input schema with a name field', () => {
+    expect(greetInputSchema.name).toBeDefined();
+    // empty names are rejected by the schema
+    expect(greetInputSchema.name.safeParse('').success).toBe(false);
+    expect(greetInputSchema.name.safeParse('Grace').success).toBe(true);
+  });
+});

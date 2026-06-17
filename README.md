@@ -1,6 +1,6 @@
 # tk — Project Harness Generator for AI-Assisted Development
 
-> `npx tkcli quick my-app --stack nextjs` — 13 stacks. Multi-stack composition. Per-stack AI context. One command.
+> `npx tkcli quick my-app --stack nextjs` — 14 stacks. Multi-stack composition. Per-stack AI context. One command.
 
 You just scaffolded a project. Now your AI agent needs to know how to work with it. Language? Framework? Build tool? Test runner? Error handling style? Conventions?
 
@@ -9,7 +9,7 @@ Instead of telling it every time, **tk generates the harness** — CLAUDE.md, AG
 ## When to use tk
 
 - **Starting a new project** and want AI-assisted development that works out of the box
-- **Working across multiple tech stacks** — tk is the only tool with 13 stack templates and multi-stack composition
+- **Working across multiple tech stacks** — tk is the only tool with 14 stack templates and multi-stack composition
 - **Need I-to generate a fullstack app** — `tk quick app --stack nextjs --components express` merges both stacks into one project
 - **Adding AI context to an existing project** — `tk init` detects the stack and injects config files
 
@@ -22,7 +22,7 @@ tk quick my-api --stack express --addons docker,ci   # With infra
 tk quick my-api --dry-run                   # Preview before writing
 ```
 
-## Stacks (13)
+## Stacks (14)
 
 | Stack | Dev Command | Best for |
 |-------|-------------|----------|
@@ -37,6 +37,7 @@ tk quick my-api --dry-run                   # Preview before writing
 | `go` | `go run ./cmd/server` | Go microservices |
 | `flutter` | `flutter run` | Cross-platform mobile |
 | `cli-ts` | `npm run dev -- hello` | TypeScript CLI tools |
+| `mcp-server` | `npm run dev` | Model Context Protocol servers (TS SDK, stdio) |
 | `python` | `python src/main.py` | Python scripts/libs |
 | `generic` | — | Custom project skeleton |
 
@@ -61,7 +62,7 @@ my-app/
 
 | Tool | Stacks | AI Harness | Multi-Stack | Per-Stack IDE Rules |
 |------|--------|-----------|-------------|-------------------|
-| **tkcli** | **13** | **CLAUDE.md + AGENTS.md + .cursorrules + .windsurfrules + .claude/settings.json + copilot-instructions** | **`--components`** | **Yes** |
+| **tkcli** | **14** | **CLAUDE.md + AGENTS.md + .cursorrules + .windsurfrules + .claude/settings.json + copilot-instructions** | **`--components`** | **Yes** |
 | create-next-app | 1 | — | — | — |
 | create-vite | 4 | — | — | — |
 | Context Forge | — | CLAUDE.md + .claude/ surface | — | — |
@@ -69,7 +70,7 @@ my-app/
 
 ## Features
 
-- **13 stack templates** — from Rust to Flutter, each with AI config tuned to the stack
+- **14 stack templates** — from Rust to Flutter, each with AI config tuned to the stack
 - **Multi-stack composition** — `tk quick app --stack nextjs --components express` merges stacks
 - **Per-stack IDE rules** — `.cursorrules` and `.windsurfrules` differ by stack (not one-size-fits-all)
 - **`.claude/settings.json`** — permission allowlist + MCP placeholder for Claude Code

@@ -1,0 +1,14 @@
+import { z } from 'zod';
+
+/**
+ * Pure tool logic, kept separate from the server wiring so it can be unit-tested
+ * without standing up a transport. Add your own tools here as plain functions.
+ */
+export function greet(name: string): string {
+  return `Hello, ${name}! This greeting came from the {{projectName}} MCP server.`;
+}
+
+/** Zod input schema for the `greet` tool (shape object, as the MCP SDK expects). */
+export const greetInputSchema = {
+  name: z.string().min(1).describe('Name of the person to greet'),
+};

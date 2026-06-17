@@ -16,6 +16,7 @@ const PY: string[] = ['Bash(python:*)', 'Bash(pip:*)', 'Bash(uv:*)', 'Bash(pytes
 const STACK_PERMISSIONS: Record<string, string[]> = {
   'node-ts': NPM,
   'cli-ts': NPM,
+  'mcp-server': NPM,
   'react-spa': NPM,
   'vue': NPM,
   'nuxt': NPM,

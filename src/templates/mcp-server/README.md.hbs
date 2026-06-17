@@ -1,0 +1,50 @@
+# {{projectName}}
+
+> {{description}}
+
+A [Model Context Protocol](https://modelcontextprotocol.io) server built with TypeScript
+and the official `@modelcontextprotocol/sdk`, speaking over stdio.
+
+## Quick start
+
+```bash
+npm install
+npm run build
+npm run inspect   # explore the server in the MCP Inspector
+```
+
+## Register with an MCP client
+
+After building, point your client at the compiled server. For Claude Code, add to `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "{{projectName}}": { "command": "node", "args": ["dist/index.js"] }
+  }
+}
+```
+
+## Add a tool
+
+Tools live in `src/tools.ts` as pure functions plus a zod input schema, registered in
+`src/index.ts`:
+
+```ts
+server.registerTool(
+  'my_tool',
+  { title: 'My Tool', description: '…', inputSchema: { q: z.string() } },
+  async ({ q }) => ({ content: [{ type: 'text', text: doSomething(q) }] }),
+);
+```
+
+> **Important:** never `console.log` — stdout is the protocol channel. Log to stderr.
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Run with tsx (stdio) |
+| `npm run build` | Compile to `dist/` |
+| `npm run inspect` | Launch the MCP Inspector |
+| `npm test` | Run tests |

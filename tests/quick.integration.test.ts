@@ -73,11 +73,11 @@ describe('tk quick - CLI infrastructure', () => {
   });
 });
 
-describe('tk quick - 12 stack template integrity', () => {
+describe('tk quick - stack template integrity', () => {
   const stacks = [
     'node-ts', 'react-spa', 'vue', 'nuxt', 'express',
     'fastapi', 'nextjs', 'rust', 'go', 'flutter',
-    'cli-ts', 'python',
+    'cli-ts', 'python', 'mcp-server',
   ];
 
   const stackKeyFiles: Record<string, string[]> = {
@@ -92,6 +92,7 @@ describe('tk quick - 12 stack template integrity', () => {
     'go': ['go.mod', 'Makefile', 'cmd/server/main.go', 'internal/app/app.go', 'internal/app/app_test.go', 'internal/business/user/store.go', 'internal/business/user/handler.go', 'internal/foundation/logger/logger.go', 'CLAUDE.md', 'README.md', 'AGENTS.md', 'CHANGELOG.md'],
     'flutter': ['pubspec.yaml', 'lib/main.dart', 'lib/app/app.dart', 'lib/counter/counter.dart', 'lib/counter/view/counter_page.dart', 'lib/counter/view/counter_body.dart', 'test/app_test.dart', 'test/counter_view_test.dart', 'CLAUDE.md', 'README.md', 'AGENTS.md', 'analysis_options.yaml', 'CHANGELOG.md'],
     'cli-ts': ['package.json', 'tsconfig.json', 'src/index.ts', 'tests/index.test.ts', 'CLAUDE.md', 'README.md', 'eslint.config.mjs', 'AGENTS.md'],
+    'mcp-server': ['package.json', 'tsconfig.json', 'src/index.ts', 'src/tools.ts', 'tests/tools.test.ts', 'CLAUDE.md', 'README.md', 'eslint.config.mjs', 'AGENTS.md'],
     'python': ['pyproject.toml', 'src/main.py', 'src/cli.py', 'src/logger.py', 'src/__init__.py', 'src/__main__.py', 'tests/test_main.py', 'CLAUDE.md', 'README.md', '.python-version', 'Makefile', 'justfile', 'AGENTS.md'],
   };
 

@@ -123,6 +123,16 @@ export const STACKS: StackDefinition[] = [
     hasCustomLayout: false,
   },
   {
+    id: 'mcp-server',
+    label: 'MCP Server',
+    description: 'Model Context Protocol server (TypeScript SDK, stdio)',
+    templateDir: 'mcp-server',
+    defaultSrcDir: 'src',
+    defaultTestDir: 'tests',
+    needsNpmInstall: true,
+    hasCustomLayout: false,
+  },
+  {
     id: 'python',
     label: 'Python',
     description: 'Python project with pyproject.toml, pytest',

@@ -1,0 +1,16 @@
+# {{projectName}}
+
+> {{description}}
+
+## AI Coding Rules (Cursor)
+
+### Stack: {{stack}}
+
+- **Build**: `npm run build` (tsc), `npm run dev` (tsx, stdio)
+- **Test**: `npm test` (Vitest — test tool logic in `src/tools.ts` directly)
+- **Inspect**: `npm run inspect` (MCP Inspector against `dist/index.js`)
+- **Structure**: `src/index.ts` (server + transport wiring) → `src/tools.ts` (tool logic + zod schemas)
+- **NEVER `console.log`** — stdout is the MCP protocol channel; log to `console.error` (stderr)
+- **Tools return** `{ content: [{ type: 'text', text: ... }] }`, not raw values
+- **Validate inputs** with the zod `inputSchema` declared at registration
+- **Tip**: keep `index.ts` to wiring; put testable logic in `tools.ts`

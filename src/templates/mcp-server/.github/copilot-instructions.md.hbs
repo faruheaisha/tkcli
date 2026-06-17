@@ -1,0 +1,8 @@
+# {{projectName}}
+# Stack: {{stack}}
+
+A Model Context Protocol server (TypeScript, @modelcontextprotocol/sdk) over stdio.
+NEVER console.log — stdout is the MCP protocol channel; log to stderr (console.error).
+Tool logic + zod input schemas live in src/tools.ts; server/transport wiring in src/index.ts.
+Tools return { content: [{ type: 'text', text: ... }] }. Test tool functions with Vitest.
+Build with tsc; clients run dist/index.js.
