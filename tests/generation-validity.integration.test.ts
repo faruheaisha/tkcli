@@ -108,4 +108,33 @@ describe('generation validity — guards against broken AI context', () => {
       }
     });
   }
+
+  it('tailors permissions per stack — no foreign toolchains', async () => {
+    const { scaffold } = await import('../src/commands/quick/scaffold.js');
+    const readAllow = async (stack: string): Promise<string[]> => {
+      const dir = tmpDir();
+      await scaffold({
+        projectName: 'perm', description: 'x', stack,
+        targetDir: join(dir, 'p'), includeAi: true, initGit: false, installDeps: false,
+      });
+      return JSON.parse(readFileSync(join(dir, 'p', '.claude', 'settings.json'), 'utf-8')).permissions.allow;
+    };
+
+    const node = await readAllow('node-ts');
+    expect(node).toContain('Bash(npm:*)');
+    expect(node.some(r => r.includes('cargo') || r.includes('flutter') || r.includes('pip'))).toBe(false);
+
+    const rust = await readAllow('rust');
+    expect(rust).toContain('Bash(cargo:*)');
+    expect(rust.some(r => r.includes('npm') || r.includes('flutter'))).toBe(false);
+
+    const fastapi = await readAllow('fastapi');
+    expect(fastapi).toContain('Bash(uvicorn:*)');
+    expect(fastapi.some(r => r.includes('npm') || r.includes('cargo'))).toBe(false);
+
+    for (const list of [node, rust, fastapi]) {
+      expect(list).toContain('Read');
+      expect(list).toContain('Bash(git commit:*)');
+    }
+  });
 });

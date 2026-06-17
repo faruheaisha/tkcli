@@ -1,24 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm:*)",
-      "Bash(npx:*)",
-      "Bash(pnpm:*)",
-      "Bash(yarn:*)",
-      "Bash(node:*)",
-      "Bash(git status)",
-      "Bash(git diff:*)",
-      "Bash(git log:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(cargo:*)",
-      "Bash(go:*)",
-      "Bash(flutter:*)",
-      "Bash(dart:*)",
-      "Bash(pip:*)",
-      "Bash(uv:*)",
-      "Bash(python:*)",
-      "Bash(pytest:*)"
+{{#each claudePermissions}}      "{{{this}}}"{{#unless @last}},{{/unless}}
+{{/each}}
     ],
     "deny": [
       "Read(./.env)",

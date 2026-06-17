@@ -8,6 +8,7 @@ import { logger, withSpinner } from '../../logger.js';
 import { getStack } from './stacks.js';
 import { STACKS } from './stacks.js';
 import { getDevCommand } from './dev-command.js';
+import { getClaudePermissions } from './permissions.js';
 import { composeScaffold } from './composer.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -34,6 +35,8 @@ export interface TemplateContext {
   stack: string;
   components: string[];
   year: number;
+  /** Claude Code allow-list rules tailored to this stack (+ composed components). */
+  claudePermissions: string[];
 }
 
 export function findTemplatesDir(): string {
@@ -49,12 +52,14 @@ export function findTemplatesDir(): string {
 }
 
 export function buildContext(opts: ScaffoldOptions): TemplateContext {
+  const components = opts.components ?? [];
   return {
     projectName: opts.projectName,
     description: opts.description,
     stack: opts.stack,
-    components: opts.components ?? [],
+    components,
     year: new Date().getFullYear(),
+    claudePermissions: getClaudePermissions(opts.stack, components),
   };
 }
 
