@@ -5,6 +5,7 @@ import { ensureDir } from '../../utils/fs.js';
 import { findTemplatesDir, buildContext } from '../quick/scaffold.js';
 import { getDevCommand } from '../quick/dev-command.js';
 import { detectStack } from '../../utils/detect-stack.js';
+import { syncProject } from '../sync/sync-project.js';
 import { logger } from '../../logger.js';
 
 export interface InitOptions {
@@ -96,6 +97,14 @@ export async function initProject(opts: InitOptions): Promise<string[]> {
 
   if (createdFiles.length > 0) {
     logger.info(`AI context files added for stack: ${stack}`);
+  }
+
+  // Align CLAUDE.md's managed region with the project's real structure so an
+  // existing project gets accurate context immediately (not a placeholder).
+  try {
+    await syncProject({ targetDir, projectName, description, stack });
+  } catch {
+    // sync is best-effort; the context files are already written
   }
 
   return createdFiles;

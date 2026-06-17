@@ -20,7 +20,15 @@ export function detectStack(dir: string): string {
   if (existsSync(join(dir, 'Cargo.toml'))) return 'rust';
   if (existsSync(join(dir, 'go.mod'))) return 'go';
   if (existsSync(join(dir, 'pubspec.yaml'))) return 'flutter';
-  if (existsSync(join(dir, 'pyproject.toml'))) return 'python';
+  if (existsSync(join(dir, 'pyproject.toml'))) {
+    try {
+      // FastAPI and plain Python both use pyproject.toml — disambiguate by dependency.
+      if (/\bfastapi\b/i.test(readFileSync(join(dir, 'pyproject.toml'), 'utf-8'))) return 'fastapi';
+    } catch {
+      // unreadable pyproject — treat as plain python
+    }
+    return 'python';
+  }
   if (existsSync(join(dir, 'package.json'))) {
     try {
       const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf-8'));

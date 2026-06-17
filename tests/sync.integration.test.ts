@@ -76,6 +76,52 @@ describe('tk sync — keep CLAUDE.md aligned with real structure', () => {
     expect(after).toBe(before);
   });
 
+  it('builds a Commands block from real package.json scripts', async () => {
+    const { syncProject } = await import('../src/commands/sync/sync-project.js');
+    await syncProject({ targetDir: projectDir, projectName: 'app', description: 'sync test' });
+    const managed = extractRegion(readFileSync(join(projectDir, 'CLAUDE.md'), 'utf-8'), 'managed')!;
+    expect(managed).toContain('## Commands');
+    // node-ts package.json defines a dev script → surfaced as `npm run dev`.
+    expect(managed).toContain('npm run dev');
+  });
+
+  it('tk init auto-syncs real structure for an existing project', async () => {
+    // Fresh project WITHOUT AI files, with an extra real directory.
+    const dir = tmpDir();
+    const proj = join(dir, 'legacy');
+    const { scaffold } = await import('../src/commands/quick/scaffold.js');
+    await scaffold({
+      projectName: 'legacy', description: 'existing', stack: 'node-ts',
+      targetDir: proj, includeAi: false, initGit: false, installDeps: false,
+    });
+    mkdirSync(join(proj, 'src', 'services'), { recursive: true });
+    writeFileSync(join(proj, 'src', 'services', 'order.ts'), 'export {};\n');
+
+    const { initProject } = await import('../src/commands/init/init-project.js');
+    await initProject({ targetDir: proj, projectName: 'legacy', description: 'existing' });
+
+    const managed = extractRegion(readFileSync(join(proj, 'CLAUDE.md'), 'utf-8'), 'managed')!;
+    expect(managed).toContain('services/');
+    expect(managed).toContain('order.ts');
+    expect(managed).not.toContain('Run `tk sync` to populate'); // placeholder replaced
+  });
+
+  it('distinguishes FastAPI from plain Python via pyproject.toml', async () => {
+    const dir = tmpDir();
+    const proj = join(dir, 'svc');
+    const { scaffold } = await import('../src/commands/quick/scaffold.js');
+    await scaffold({
+      projectName: 'svc', description: 'api', stack: 'fastapi',
+      targetDir: proj, includeAi: true, initGit: false, installDeps: false,
+    });
+    const { syncProject } = await import('../src/commands/sync/sync-project.js');
+    const result = await syncProject({ targetDir: proj, projectName: 'svc', description: 'api' });
+    expect(result.stack).toBe('fastapi');
+    const managed = extractRegion(readFileSync(join(proj, 'CLAUDE.md'), 'utf-8'), 'managed')!;
+    expect(managed).toContain('FastAPI');
+    expect(managed).toContain('uvicorn');
+  });
+
   it('preserves the user region across tk update too', async () => {
     const { updateProject } = await import('../src/commands/update/update-project.js');
     const claudePath = join(projectDir, 'CLAUDE.md');

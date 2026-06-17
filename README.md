@@ -85,12 +85,35 @@ my-app/
 
 ```
 tk quick [name]   Scaffold a project
-tk init           Add AI context files to an existing project
+tk init           Add AI context files to an existing project (auto-syncs structure)
 tk add <module>   Add a component/infra module
-tk update         Re-render AI context files
+tk update         Re-render AI context files (preserves your Project Notes)
+tk sync           Refresh CLAUDE.md to match the project's real structure
 tk list           List all available stacks and infra modules
 tk info           Show version and system info
 ```
+
+## Keeping context in sync
+
+tk doesn't just generate context once and walk away — it maintains it. Generated
+`CLAUDE.md` files are split into two regions:
+
+```markdown
+<!-- tk:managed:start -->   ← tk sync regenerates this from your real files
+**Stack:** … · **Dev:** … · **Test:** …
+## Commands          (scanned from package.json scripts)
+## Project Structure (scanned from the actual directory tree)
+<!-- tk:managed:end -->
+
+## Project Notes
+<!-- tk:user:start -->   ← yours; tk never overwrites it
+- Domain rules, decisions, gotchas…
+<!-- tk:user:end -->
+```
+
+Run `tk sync` anytime your project structure changes and the managed region updates
+to reflect reality — so your AI agent never reads a stale or hallucinated layout.
+Your Project Notes are always preserved.
 
 ## Install
 

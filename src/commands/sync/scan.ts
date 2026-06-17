@@ -1,5 +1,6 @@
-import { readdirSync, statSync } from 'fs';
+import { readdirSync, statSync, existsSync, readFileSync } from 'fs';
 import { join } from 'path';
+import { getDevCommand, getTestCommand } from '../quick/dev-command.js';
 
 /** Directories and files that never belong in a project-structure overview. */
 const IGNORED_DIRS = new Set([
@@ -87,4 +88,41 @@ export function scanStructure(rootDir: string, opts: ScanOptions = {}): string {
   render(roots, '');
   if (truncated) lines.push('… (truncated)');
   return lines.join('\n');
+}
+
+export interface CommandEntry {
+  invoke: string;
+  detail: string;
+}
+
+/**
+ * Discover the project's real commands. For npm stacks, reads package.json scripts
+ * (the source of truth — users add their own). Otherwise falls back to the stack's
+ * conventional dev/test commands.
+ */
+export function scanCommands(rootDir: string, stack: string): CommandEntry[] {
+  const pkgPath = join(rootDir, 'package.json');
+  if (existsSync(pkgPath)) {
+    try {
+      const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+      const scripts = pkg.scripts as Record<string, string> | undefined;
+      if (scripts && Object.keys(scripts).length > 0) {
+        return Object.entries(scripts)
+          .slice(0, 12)
+          .map(([name, body]) => ({
+            invoke: `npm run ${name}`,
+            detail: String(body).length > 60 ? String(body).slice(0, 57) + '…' : String(body),
+          }));
+      }
+    } catch {
+      // malformed package.json — fall through to conventional commands
+    }
+  }
+
+  const entries: CommandEntry[] = [];
+  const dev = getDevCommand(stack);
+  const test = getTestCommand(stack);
+  if (dev) entries.push({ invoke: dev, detail: 'run locally' });
+  if (test) entries.push({ invoke: test, detail: 'run tests' });
+  return entries;
 }

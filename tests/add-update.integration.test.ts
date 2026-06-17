@@ -219,7 +219,7 @@ describe('tk update - detect stack from existing project', () => {
     });
   });
 
-  it('detects python stack and renders correct CLAUDE.md', async () => {
+  it('detects fastapi (not plain python) from pyproject.toml and renders correct CLAUDE.md', async () => {
     const { updateProject } = await import('../src/commands/update/update-project.js');
     const result = await updateProject({
       targetDir: join(projectDir, 'py-update'),
@@ -228,9 +228,9 @@ describe('tk update - detect stack from existing project', () => {
     });
     expect(result.updated).toContain(join(projectDir, 'py-update', 'CLAUDE.md'));
     const claudeMd = read(join(projectDir, 'py-update', 'CLAUDE.md'));
-    // Should have python-specific content (pip install command)
-    expect(claudeMd).toContain('pip install');
-    expect(claudeMd).toContain('pyproject.toml');
+    // FastAPI projects use pyproject.toml but must resolve to the fastapi stack, not plain python.
+    expect(claudeMd).toContain('FastAPI');
+    expect(claudeMd).toContain('pytest');
   });
 });
 
