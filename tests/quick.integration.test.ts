@@ -168,6 +168,24 @@ describe('tk quick - non-interactive scaffold', () => {
     expect(hasFile(files, '.github/workflows/ci.yml')).toBe(true);
     expect(hasFile(files, '.gitleaks.toml')).toBe(true);
     expect(hasFile(files, '.pre-commit-config.yaml')).toBe(true);
+
+    // No other stack's Dockerfile should leak into the project.
+    const dockerfiles = readdirSync(join(dir, 'test-infra')).filter(f => f.startsWith('Dockerfile'));
+    expect(dockerfiles).toEqual(['Dockerfile']);
+  });
+
+  it('docker addon resolves only the matching Dockerfile per stack', async () => {
+    const { scaffold } = await import('../src/commands/quick/scaffold.js');
+    for (const stack of ['python', 'rust', 'go'] as const) {
+      const files = await scaffold({
+        projectName: `dk-${stack}`, description: 'x', stack,
+        targetDir: join(dir, `dk-${stack}`), includeAi: false, initGit: false, installDeps: false,
+        addons: ['docker'],
+      });
+      expect(hasFile(files, 'Dockerfile')).toBe(true);
+      const leaks = readdirSync(join(dir, `dk-${stack}`)).filter(f => f.startsWith('Dockerfile') && f !== 'Dockerfile');
+      expect(leaks, `${stack} leaked ${leaks.join(', ')}`).toEqual([]);
+    }
   });
 
   it('scaffolds fastapi project with Python files', async () => {

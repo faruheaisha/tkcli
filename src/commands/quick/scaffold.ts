@@ -6,7 +6,7 @@ import { execSync, ExecSyncOptions } from 'child_process';
 import { ensureDir } from '../../utils/fs.js';
 import { logger, withSpinner } from '../../logger.js';
 import { getStack } from './stacks.js';
-import { STACKS } from './stacks.js';
+import { STACKS, ALL_STACK_IDS } from './stacks.js';
 import { getDevCommand } from './dev-command.js';
 import { getClaudePermissions } from './permissions.js';
 import { composeScaffold } from './composer.js';
@@ -161,13 +161,14 @@ export function copyInfraModule(moduleDir: string, targetDir: string, ctx: Templ
     const isHbs = extname(entry) === '.hbs';
     const baseName = isHbs ? entry.slice(0, -4) : entry;
 
-    // Resolve stack-specific variant: Dockerfile.node-ts.hbs → Dockerfile, ci.node-ts.yml.hbs → ci.yml → .github/workflows/ci.yml
+    // Resolve stack-specific variant: Dockerfile.node-ts.hbs → Dockerfile, ci.node-ts.yml.hbs → .github/workflows/ci.yml.
+    // Files qualified for a DIFFERENT stack (e.g. Dockerfile.rust in a node-ts project) are skipped.
     let destName = baseName;
     const parts = baseName.split('.');
-    const stackIndex = parts.indexOf(stack);
-    if (stackIndex >= 0) {
-      destName = parts.filter((_, i) => i !== stackIndex).join('.');
-      if (destName === 'ci') destName = '.github/workflows/ci.yml';
+    const stackQualifier = parts.find((p) => ALL_STACK_IDS.has(p));
+    if (stackQualifier) {
+      if (stackQualifier !== stack) continue; // belongs to another stack
+      destName = parts.filter((p) => p !== stackQualifier).join('.');
       if (destName.endsWith('.yml') && !destName.includes('/')) {
         destName = '.github/workflows/' + destName;
       }

@@ -136,6 +136,9 @@ export const STACKS: StackDefinition[] = [
 
 const COMPONENT_ONLY_STACKS = new Set(['express-prisma']);
 
+/** Every stack id that can qualify a template filename (primary + component-only). */
+export const ALL_STACK_IDS = new Set<string>([...STACKS.map((s) => s.id), ...COMPONENT_ONLY_STACKS]);
+
 /** Stacks that can be selected as primary (not component-only) */
 export function getPrimaryStacks(): StackDefinition[] {
   return STACKS.filter(s => !COMPONENT_ONLY_STACKS.has(s.id));
