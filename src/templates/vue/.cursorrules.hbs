@@ -1,0 +1,15 @@
+# {{projectName}}
+
+> {{description}}
+
+## AI Coding Rules (Cursor)
+
+### Stack: {{stack}}
+
+- **Build**: `npm run dev` (Vite), `npm run build` (vue-tsc + vite build)
+- **Test**: `npm test` (vitest + @vue/test-utils)
+- **Structure**: Composition API only — always `<script setup lang="ts">`
+- **State**: Pinia stores for global state, composables for reusable logic
+- **Routing**: Vue Router for SPA routing
+- **Deps**: `vue@3`, `vue-router@4`, `pinia@3`
+- **Tip**: `reactive` on large objects is expensive — use `ref` with `shallowRef` for perf

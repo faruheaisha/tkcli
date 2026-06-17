@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(pnpm:*)",
+      "Bash(yarn:*)",
+      "Bash(node:*)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(cargo:*)",
+      "Bash(go:*)",
+      "Bash(flutter:*)",
+      "Bash(dart:*)",
+      "Bash(pip:*)",
+      "Bash(uv:*)",
+      "Bash(python:*)",
+      "Bash(pytest:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(rm:*)"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "echo \"{{stack}} · {{projectName}}\""
+  }
+}

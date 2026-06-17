@@ -1,0 +1,14 @@
+# {{projectName}}
+
+> {{description}}
+
+## Windsurf AI Development Rules
+
+### Stack: {{stack}}
+
+- Cargo project with clap (CLI) or axum (web)
+- thiserror for lib errors, anyhow for app errors — never `.unwrap()` in production
+- Async with tokio, never std::thread
+- Test: `cargo test` + `cargo clippy` (must pass)
+- Prefer references over `.clone()` — Clippy warns on unnecessary clones
+- Restructure to avoid borrow issues instead of reaching for unsafe

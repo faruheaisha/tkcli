@@ -1,0 +1,7 @@
+# {{projectName}}
+# Stack: {{stack}}
+
+This project uses Go 1.23 with standard layout: cmd/ + internal/ + pkg/.
+Always check errors, wrap with fmt.Errorf("context: %w", err).
+No global state — constructor injection only. slog for logging.
+Table-driven tests with testing package. go vet ./... in CI.

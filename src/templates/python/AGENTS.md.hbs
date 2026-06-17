@@ -1,0 +1,19 @@
+# AGENTS.md — {{projectName}}
+
+Guide for AI coding assistants working on this Python project.
+
+## Commands
+
+| Task | Command |
+|------|---------|
+| Everything | `make qa` |
+| Tests | `pytest --cov --cov-report=term-missing` |
+| Lint | `ruff check src/` |
+| Type-check | `mypy src/` |
+
+## Conventions
+
+- **Type annotations required** on all public functions (mypy strict).
+- **CLI tests** use `click.testing.CliRunner` (see `tests/test_main.py`).
+- **Logging** goes to stderr via `logging.StreamHandler`; CLI output goes to stdout via `click.echo`.
+- **No network calls in unit tests** — mock external HTTP with `responses` or `pytest-httpx`.

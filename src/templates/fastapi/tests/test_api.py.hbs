@@ -1,0 +1,74 @@
+import pytest
+from httpx import AsyncClient, ASGITransport
+from src.main import app
+
+
+@pytest.fixture
+async def client():
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as ac:
+        yield ac
+
+
+@pytest.mark.asyncio
+async def test_health(client: AsyncClient):
+    response = await client.get("/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
+
+
+@pytest.mark.asyncio
+async def test_list_users_empty(client: AsyncClient):
+    response = await client.get("/api/v1/users")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] == 0
+    assert data["items"] == []
+
+
+@pytest.mark.asyncio
+async def test_create_user(client: AsyncClient):
+    response = await client.post("/api/v1/users", json={"email": "alice@example.com", "name": "Alice"})
+    assert response.status_code == 201
+    data = response.json()
+    assert data["email"] == "alice@example.com"
+    assert data["name"] == "Alice"
+    assert "id" in data
+
+
+@pytest.mark.asyncio
+async def test_create_user_missing_email(client: AsyncClient):
+    response = await client.post("/api/v1/users", json={"name": "Bob"})
+    assert response.status_code == 400
+
+
+@pytest.mark.asyncio
+async def test_create_user_invalid_email(client: AsyncClient):
+    response = await client.post("/api/v1/users", json={"email": "not-an-email", "name": "Bob"})
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_create_user_duplicate_email(client: AsyncClient):
+    await client.post("/api/v1/users", json={"email": "dup@test.com", "name": "First"})
+    response = await client.post("/api/v1/users", json={"email": "dup@test.com", "name": "Second"})
+    assert response.status_code == 400
+
+
+@pytest.mark.asyncio
+async def test_pagination(client: AsyncClient):
+    for i in range(5):
+        await client.post("/api/v1/users", json={"email": f"user{i}@test.com", "name": f"User{i}"})
+    response = await client.get("/api/v1/users?page=1&page_size=2")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data["items"]) == 2
+    assert data["total"] >= 5
+    assert data["page"] == 1
+    assert data["page_size"] == 2
+
+
+@pytest.mark.asyncio
+async def test_404_unknown_route(client: AsyncClient):
+    response = await client.get("/unknown-route")
+    assert response.status_code == 404

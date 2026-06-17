@@ -1,0 +1,15 @@
+# {{projectName}}
+
+> {{description}}
+
+## AI Coding Rules (Cursor)
+
+### Stack: {{stack}}
+
+- **Build**: `pip install -e ".[dev]"`, `python src/main.py`
+- **Test**: `pytest --cov`, `mypy src/`
+- **Structure**: `src/` layout — `from src import ...` not relative imports
+- **Types**: type hints required everywhere — mypy in CI enforces this
+- **Env**: `.venv/` at project root, never commit
+- **Tip**: `pathlib` over `os.path` for modern Python path handling
+- **Tip**: avoid `def foo(x=[])` — mutable default args share state across calls

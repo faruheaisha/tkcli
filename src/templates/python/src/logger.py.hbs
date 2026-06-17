@@ -1,0 +1,32 @@
+"""Logging configuration for {{projectName}}.
+
+Provides ``setup_logging()`` called once at startup to configure
+structured-ish output (level, timestamp, module, message).
+"""
+
+import logging
+import sys
+
+
+def setup_logging(level: int = logging.INFO) -> None:
+    """Configure the root logger for {{projectName}}.
+
+    Parameters
+    ----------
+    level : int
+        One of Python's ``logging.DEBUG``, ``INFO``, ``WARNING``, etc.
+    """
+    handler = logging.StreamHandler(sys.stderr)
+    handler.setLevel(level)
+
+    formatter = logging.Formatter(
+        fmt="%(asctime)s [%(levelname)-7s] %(name)s: %(message)s",
+        datefmt="%H:%M:%S",
+    )
+    handler.setFormatter(formatter)
+
+    root = logging.getLogger()
+    root.setLevel(level)
+    # Avoid duplicate handlers on repeated calls
+    if not any(isinstance(h, logging.StreamHandler) for h in root.handlers):
+        root.addHandler(handler)

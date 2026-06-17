@@ -1,0 +1,12 @@
+<template>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
+</template>
+
+<script setup lang="ts">
+useHead({
+  title: "{{projectName}}",
+  meta: [{ name: "description", content: "{{description}}" }],
+});
+</script>

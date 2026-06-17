@@ -1,0 +1,14 @@
+# {{projectName}}
+
+> {{description}}
+
+## Windsurf AI Development Rules
+
+### Stack: {{stack}}
+
+- Commander.js + chalk for CLI UX
+- ESM, bin entry with shebang
+- Test: Vitest with mocked stdout/stdin
+- Always exit non-zero on failure
+- Windows-safe paths: `path.join()` not string concat
+- Handle SIGINT/SIGTERM for clean shutdown

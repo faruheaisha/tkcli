@@ -1,0 +1,70 @@
+# {{projectName}}
+
+{{description}}
+
+## What you need to modify
+
+Your project has 9 files. You only need to care about 4:
+
+| File | What it does | When to edit |
+|------|-------------|-------------|
+| `lib/app/` | App routing and providers | **Every time** |
+| `lib/` (your feature folders) | Feature screens and logic | **Every time** |
+| `test/` | Tests for your features | **Every time** |
+| `lib/main.dart` | App entry point | Rarely |
+| Others (android/, ios/, pubspec.yaml) | Platform config | Almost never |
+
+## Quick Start
+
+```bash
+flutter pub get
+flutter run
+```
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `flutter run` | Run on connected device/emulator |
+| `flutter build apk` | Build Android APK |
+| `flutter build ios` | Build iOS (requires macOS) |
+| `flutter test` | Run tests |
+| `flutter analyze` | Static analysis |
+
+## Project Structure
+
+```
+├── lib/
+│   ├── main.dart              # App entry point
+│   ├── app/
+│   │   └── app.dart           # MaterialApp + GoRouter setup
+│   ├── counter/
+│   │   ├── counter.dart       # StateNotifier provider
+│   │   └── view/
+│   │       ├── counter_page.dart  # Counter page (scaffold)
+│   │       └── counter_body.dart  # Counter UI body
+├── test/
+│   ├── app_test.dart          # App + counter logic tests
+│   └── counter_view_test.dart # Counter widget tests
+├── analysis_options.yaml      # Strict Dart lints
+├── pubspec.yaml               # Package manifest
+└── README.md
+```
+
+## Stack
+
+| Layer | Technology |
+|-------|------------|
+| Framework | Flutter |
+| Language | Dart |
+| State Management | Riverpod |
+| Navigation | GoRouter |
+| Design System | Material 3 |
+| Linting | flutter_lints (+ extra rules) |
+
+## Testing
+
+```bash
+flutter test
+flutter test --coverage
+```

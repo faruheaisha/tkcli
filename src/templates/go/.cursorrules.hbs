@@ -1,0 +1,16 @@
+# {{projectName}}
+
+> {{description}}
+
+## AI Coding Rules (Cursor)
+
+### Stack: {{stack}}
+
+- **Build**: `go build ./cmd/server`, `go run ./cmd/server`, `go mod tidy`
+- **Test**: `go test ./...`, `go vet ./...`
+- **Structure**: `cmd/` for binaries, `internal/` for private pkgs, `pkg/` for shared libs
+- **Errors**: always check errors, wrap with `fmt.Errorf("context: %w", err)`, use `errors.Is()`/`As()`
+- **No globals**: pass deps explicitly via constructor functions — avoid `init()`
+- **Concurrency**: `sync.WaitGroup` / `errgroup`, never `time.Sleep` for coordination
+- **Logging**: `slog` (stdlib) or `zerolog`
+- **Tip**: Go 1.23 — use `range func` iterators and `slog` where possible

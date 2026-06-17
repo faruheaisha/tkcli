@@ -1,0 +1,149 @@
+{
+  "version": "1.0",
+  "date": "2026-06-13",
+  "rubric": {
+    "stackCoverage": { "weight": 15, "description": "栈数量和覆盖面" },
+    "templateDepth": { "weight": 25, "description": "模板深度：配置/源文件/测试/CI/Docker/业务模式" },
+    "aiContextQuality": { "weight": 25, "description": "AI上下文文件质量和深度" },
+    "scaffoldDx": { "weight": 15, "description": "交互体验：dry-run/force/yes/安装方式" },
+    "extensibility": { "weight": 10, "description": "可扩展性：自定义模板/组件组合/代码生成" },
+    "robustness": { "weight": 10, "description": "健壮性：测试/验证/安全/兼容性" }
+  },
+  "tools": {
+    "tk": {
+      "scores": { "stackCoverage": 15, "templateDepth": 22, "aiContextQuality": 24, "scaffoldDx": 15, "extensibility": 8, "robustness": 8 },
+      "evidence": {
+        "stacks": 14,
+        "templateFiles": 74,
+        "aiFilesPerProject": 1,
+        "longestAiFileLines": 448,
+        "tests": 46,
+        "hasDryRun": true,
+        "hasForce": true,
+        "hasYesMode": true,
+        "hasInteractive": true,
+        "hasDocker": true,
+        "hasComponentComposition": true,
+        "hasCodeGeneration": false,
+        "hasSecurityAudit": true
+      }
+    },
+    "prompt-scaffold": {
+      "scores": { "stackCoverage": 9, "templateDepth": 20, "aiContextQuality": 20, "scaffoldDx": 11, "extensibility": 5, "robustness": 5 },
+      "evidence": {
+        "stacks": 6,
+        "templateFiles": 30,
+        "aiFilesPerProject": 4,
+        "longestAiFileLines": 200,
+        "tests": null,
+        "hasDryRun": true,
+        "hasForce": false,
+        "hasYesMode": false,
+        "hasInteractive": true,
+        "hasDocker": true,
+        "hasComponentComposition": false,
+        "hasCodeGeneration": false,
+        "hasSecurityAudit": false
+      }
+    },
+    "create-projx": {
+      "scores": { "stackCoverage": 11, "templateDepth": 23, "aiContextQuality": 6, "scaffoldDx": 11, "extensibility": 9, "robustness": 9 },
+      "evidence": {
+        "stacks": 8,
+        "templateFiles": null,
+        "aiFilesPerProject": 1,
+        "longestAiFileLines": 50,
+        "tests": null,
+        "hasDryRun": false,
+        "hasForce": false,
+        "hasYesMode": true,
+        "hasInteractive": true,
+        "hasDocker": true,
+        "hasComponentComposition": true,
+        "hasCodeGeneration": true,
+        "hasSecurityAudit": true
+      }
+    },
+    "create-x4": {
+      "scores": { "stackCoverage": 3, "templateDepth": 18, "aiContextQuality": 12, "scaffoldDx": 8, "extensibility": 7, "robustness": 9 },
+      "evidence": {
+        "stacks": 1,
+        "templateFiles": null,
+        "aiFilesPerProject": 0,
+        "longestAiFileLines": 340,
+        "tests": 153,
+        "hasDryRun": false,
+        "hasForce": false,
+        "hasYesMode": true,
+        "hasInteractive": true,
+        "hasDocker": true,
+        "hasComponentComposition": true,
+        "hasCodeGeneration": false,
+        "hasSecurityAudit": false
+      }
+    },
+    "a2scaffold": {
+      "scores": { "stackCoverage": 1, "templateDepth": 3, "aiContextQuality": 14, "scaffoldDx": 12, "extensibility": 3, "robustness": 7 },
+      "evidence": {
+        "stacks": 1,
+        "templateFiles": 10,
+        "aiFilesPerProject": 7,
+        "longestAiFileLines": 100,
+        "tests": 66,
+        "hasDryRun": true,
+        "hasForce": true,
+        "hasYesMode": false,
+        "hasInteractive": true,
+        "hasDocker": false,
+        "hasComponentComposition": false,
+        "hasCodeGeneration": false,
+        "hasSecurityAudit": false
+      }
+    },
+    "create-ai-coding-app": {
+      "scores": { "stackCoverage": 3, "templateDepth": 9, "aiContextQuality": 16, "scaffoldDx": 5, "extensibility": 2, "robustness": 2 },
+      "evidence": {
+        "stacks": 2,
+        "templateFiles": 15,
+        "aiFilesPerProject": 7,
+        "longestAiFileLines": 200,
+        "tests": null,
+        "hasDryRun": false,
+        "hasForce": false,
+        "hasYesMode": false,
+        "hasInteractive": false,
+        "hasDocker": false,
+        "hasComponentComposition": false,
+        "hasCodeGeneration": false,
+        "hasSecurityAudit": false
+      }
+    },
+    "specframe": {
+      "scores": { "stackCoverage": 0, "templateDepth": 2, "aiContextQuality": 10, "scaffoldDx": 6, "extensibility": 2, "robustness": 2 },
+      "evidence": {
+        "stacks": 0,
+        "templateFiles": 8,
+        "aiFilesPerProject": 6,
+        "longestAiFileLines": 80,
+        "tests": null,
+        "hasDryRun": false,
+        "hasForce": false,
+        "hasYesMode": false,
+        "hasInteractive": true,
+        "hasDocker": false,
+        "hasComponentComposition": false,
+        "hasCodeGeneration": false,
+        "hasSecurityAudit": false
+      }
+    }
+  },
+  "rankings": [
+    { "rank": 1, "tool": "tk", "total": 92, "gapAreas": ["templateDepth (Docker was added in Iteration 2)", "codeGeneration"] },
+    { "rank": 2, "tool": "prompt-scaffold", "total": 70, "gapAreas": ["stackCoverage", "robustness"] },
+    { "rank": 3, "tool": "create-projx", "total": 69, "gapAreas": ["aiContextQuality", "stackCoverage"] },
+    { "rank": 4, "tool": "create-x4", "total": 57, "gapAreas": ["stackCoverage", "scaffoldDx", "aiContextQuality"] },
+    { "rank": 5, "tool": "a2scaffold", "total": 40, "gapAreas": ["stackCoverage", "templateDepth"] },
+    { "rank": 6, "tool": "create-ai-coding-app", "total": 37, "gapAreas": ["stackCoverage", "scaffoldDx", "robustness"] },
+    { "rank": 7, "tool": "specframe", "total": 22, "gapAreas": ["stackCoverage", "templateDepth", "scaffoldDx"] }
+  ]
+}

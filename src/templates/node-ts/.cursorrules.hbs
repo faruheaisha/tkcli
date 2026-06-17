@@ -1,0 +1,15 @@
+# {{projectName}}
+
+> {{description}}
+
+## AI Coding Rules (Cursor)
+
+### Stack: {{stack}}
+
+- **Build**: `npm run build` (tsc), `npm run dev` (tsx), `npm start` (node dist/index.js)
+- **Test**: `npm test` (vitest), `npm run test:watch`
+- **Structure**: TypeScript ESM, `src/` for source, `tests/` co-located `.test.ts`
+- **Error handling**: try-catch at every async boundary, never swallow errors
+- **Deps**: `typescript`, `tsx`, `vitest`, `@types/node`
+- **ESM only**: always `import`/`export`, no `require()`. `"type": "module"` in package.json
+- **Tip**: tsx is for dev only — build with tsc for production

@@ -1,0 +1,14 @@
+# {{projectName}}
+
+> {{description}}
+
+## Windsurf AI Development Rules
+
+### Stack: {{stack}}
+
+- Next.js 15 App Router — `app/page.tsx`, `app/layout.tsx`
+- Server Components first — `'use client'` only for interactivity
+- Data fetching in Server Components, Server Actions for mutations
+- Route handlers in `app/api/`
+- Test: Vitest + @testing-library/react + jsdom
+- Tip: Next.js caches aggressively — use `revalidate`/`force-dynamic` explicitly

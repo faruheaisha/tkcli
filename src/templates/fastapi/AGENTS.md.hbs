@@ -1,0 +1,27 @@
+# {{projectName}}
+
+{{description}}
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `uv run python -m {{projectName}}` | Run CLI |
+| `uv run pytest` | Run tests |
+| `uv run ruff check src/` | Lint with Ruff |
+| `uv run mypy src/` | Type check with mypy |
+
+## Architecture
+
+This project uses **FastAPI + SQLAlchemy 2.0 (async)**:
+
+- **src/main.py** — FastAPI application with CORS middleware
+- **src/core/config.py** — Pydantic settings with env file support
+- **src/core/database.py** — SQLAlchemy async engine (singleton)
+- **src/routers/api.py** — Route modules (hello, users CRUD)
+
+Key conventions:
+
+- Async endpoints with Pydantic v2 validation
+- Email validation at route boundary
+- Standard `{ success, data, error }` JSON response shape

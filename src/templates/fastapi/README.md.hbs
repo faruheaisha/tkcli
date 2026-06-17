@@ -1,0 +1,95 @@
+# {{projectName}}
+
+{{description}}
+
+## What you need to modify
+
+Your project has 7 files. You only need to care about 3:
+
+| File | What it does | When to edit |
+|------|-------------|-------------|
+| `src/routers/api.py` | API endpoints | **Every time** |
+| `tests/test_api.py` | Tests for endpoints | **Every time** |
+| `src/core/database.py` | DB setup (models, connection) | When adding models |
+| `src/schemas.py` | Pydantic schemas | When adding schemas |
+| Others (Dockerfile, CI config, .env) | Project infra | Almost never |
+
+## Quick Start
+
+```bash
+cp .env.example .env
+pip install -e ".[dev]"
+uvicorn src.main:app --reload
+```
+
+Open [http://localhost:8000/docs](http://localhost:8000/docs) for Swagger UI.
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `uvicorn src.main:app --reload` | Start dev server with hot reload |
+| `pytest` | Run tests once |
+| `ruff check src/` | Lint source code |
+| `mypy src/` | Type-check source code |
+
+## Project Structure
+
+```
+├── src/
+│   ├── main.py              # FastAPI app, CORS, /health endpoint
+│   ├── routers/
+│   │   └── api.py           # API route definitions
+│   └── core/
+│       ├── config.py        # Pydantic Settings (env file)
+│       └── database.py      # SQLAlchemy async engine + session
+├── tests/
+│   └── test_api.py          # Async integration tests (httpx)
+├── pyproject.toml            # Build config, deps, tooling
+├── Dockerfile                # Multi-stage production build
+├── .env.example              # Environment variables template
+└── README.md
+```
+
+## Stack
+
+| Layer | Technology |
+|-------|------------|
+| Framework | FastAPI |
+| ORM | SQLAlchemy 2.0 (async) |
+| Migrations | Alembic |
+| Database | PostgreSQL (asyncpg) |
+| Validation | Pydantic v2 + pydantic-settings |
+| Testing | pytest + httpx |
+| Linting | Ruff (E, W, F, I, N, UP, B, C4, ARG) |
+| Type Checking | mypy (strict) |
+
+## API Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/health` | Health check |
+| GET | `/api/v1/hello` | Greeting |
+
+## Configuration
+
+Settings are loaded from `.env` via `pydantic-settings`. Key variables:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SECRET_KEY` | `changethis` | JWT signing key (change for production) |
+| `ENVIRONMENT` | `local` | `local`, `staging`, or `production` |
+| `POSTGRES_SERVER` | `localhost` | Database host |
+| `POSTGRES_PORT` | `5432` | Database port |
+| `POSTGRES_USER` | `postgres` | Database user |
+| `POSTGRES_PASSWORD` | `` | Database password |
+| `POSTGRES_DB` | `{{projectName}}` | Database name |
+| `BACKEND_CORS_ORIGINS` | `` | Comma-separated CORS origins |
+| `FRONTEND_HOST` | `http://localhost:5173` | Frontend URL for CORS |
+
+## Deployment
+
+```bash
+docker build -t {{projectName}} .
+docker run -p 8000:8000 {{projectName}}
+```

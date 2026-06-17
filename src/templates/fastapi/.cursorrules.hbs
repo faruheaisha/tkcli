@@ -1,0 +1,15 @@
+# {{projectName}}
+
+> {{description}}
+
+## AI Coding Rules (Cursor)
+
+### Stack: {{stack}}
+
+- **Build**: `pip install -e ".[dev]"`, `fastapi dev src/main.py`
+- **Test**: `pytest` (with httpx async client), `pytest --cov`
+- **Structure**: routers → schemas (Pydantic) → services → repositories
+- **Schema**: Pydantic v2 — request schemas validate input, response schemas shape API output
+- **DB**: SQLAlchemy async with asyncpg, Alembic for migrations
+- **All routes async**: every handler must be async; use async SQLAlchemy sessions
+- **Tip**: FastAPI depends on type hints for OpenAPI/validation — annotate everything

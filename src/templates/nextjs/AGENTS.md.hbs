@@ -1,0 +1,29 @@
+# {{projectName}}
+
+{{description}}
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server (Turbopack) |
+| `npm run build` | Production build |
+| `npm test` | Run tests |
+| `npm run lint` | Lint source code |
+
+## Architecture
+
+This project uses **Next.js 16 App Router** with `src/` directory convention:
+
+- **src/app/** — Routes, layouts, pages (file-based routing)
+- **src/app/layout.tsx** — Root layout with Inter font + globals.css
+- **tests/** — Vitest + @testing-library/react
+
+Key conventions:
+
+- Routes are files in `src/app/` — each folder is a route segment
+- `layout.tsx` wraps child routes (persists across navigation)
+- `page.tsx` is the UI for each route
+- API routes go in `src/app/api/` as `route.ts` files
+- Shared components go in `src/components/`
+- All data fetching is done on the server by default

@@ -1,0 +1,86 @@
+# {{projectName}}
+
+{{description}}
+
+## What you need to modify
+
+Your project has 12 files. You only need to care about 4:
+
+| File | What it does | When to edit |
+|------|-------------|-------------|
+| `app/pages/` | File-based route pages | **Every time** |
+| `app/components/` | Vue components | **Every time** |
+| `server/api/` | API route handlers | **Every time** |
+| `tests/` | Tests for components and pages | **Every time** |
+| Others (nuxt.config.ts, ESLint) | Project infra | Almost never |
+
+## Quick Start
+
+```bash
+npm install
+npm run dev
+```
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server with hot reload |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build locally |
+| `npm test` | Run tests once (Vitest) |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run lint` | Lint source files with ESLint |
+
+## Project Structure
+
+```
+├── app/
+│   ├── app.vue              # Root component (NuxtLayout + NuxtPage)
+│   ├── pages/               # File-based routing
+│   │   └── index.vue        # Home page
+│   ├── layouts/             # Layout components
+│   ├── components/          # Auto-imported Vue components
+│   ├── composables/         # Auto-imported composables
+│   └── middleware/          # Route middleware
+├── server/                  # Nitro server-side code
+│   ├── api/                 # API route handlers
+│   │   └── hello.ts         # Example API endpoint
+│   └── middleware/          # Server middleware
+├── stores/                  # Pinia stores (auto-imported)
+├── tests/
+│   └── example.test.ts      # Component tests (Vitest + @vue/test-utils)
+├── public/                  # Static assets (served at root URL)
+├── nuxt.config.ts           # Nuxt configuration
+├── package.json
+└── README.md
+```
+
+## Stack
+
+| Layer | Technology |
+|-------|------------|
+| Framework | Nuxt 4 |
+| UI Library | Vue 3 (Composition API) |
+| State Management | Pinia |
+| Routing | File-based (`app/pages/`) |
+| Server Engine | Nitro (Node.js) |
+| Language | TypeScript (strict) |
+| Testing | Vitest + @vue/test-utils |
+| Linting | ESLint |
+
+## Deployment
+
+### Docker
+
+```bash
+docker build -t {{projectName}} .
+docker run -p 3000:3000 {{projectName}}
+```
+
+### Node.js Server
+
+```bash
+npm run build
+node .output/server/index.mjs
+```

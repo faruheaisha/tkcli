@@ -1,0 +1,14 @@
+# {{projectName}}
+
+> {{description}}
+
+## Windsurf AI Development Rules
+
+### Stack: {{stack}}
+
+- Express 5 + Prisma + Zod layered architecture
+- routes → controllers (Zod validation) → services → repositories
+- Error middleware catches all — no try/catch in individual handlers
+- Standard response: `{ success, data?, error? }`
+- Test: Vitest + supertest for integration tests
+- Prisma: always use migrations, never `db push` in production

@@ -1,0 +1,78 @@
+# {{projectName}}
+
+{{description}}
+
+## What you need to modify
+
+Your project has 11 files. You only need to care about 3:
+
+| File | What it does | When to edit |
+|------|-------------|-------------|
+| `src/App.vue` | Root component | **Every time** |
+| `src/pages/` | Your page components | **Every time** |
+| `tests/` | Tests for your components | **Every time** |
+| Others (vite config, Dockerfile, ESLint) | Project infra | Almost never |
+
+## Quick Start
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173).
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server with HMR |
+| `npm run build` | Type-check and build for production |
+| `npm run preview` | Preview production build locally |
+| `npm test` | Run tests once (Vitest) |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run lint` | Lint source with ESLint |
+
+## Project Structure
+
+```
+├── src/
+│   ├── main.ts            # Entry point (Pinia + Router)
+│   ├── App.vue            # Root component
+│   ├── pages/             # Page components
+│   ├── stores/            # Pinia stores
+│   └── ...                # Your components, composables, styles
+├── public/                # Static assets
+├── index.html             # Vite entry HTML
+├── vite.config.ts         # Vite + Vitest configuration
+├── Dockerfile             # Multi-stage nginx build
+├── package.json
+└── README.md
+```
+
+## Stack
+
+| Layer | Technology |
+|-------|------------|
+| UI Library | Vue 3 (Composition API) |
+| Bundler | Vite 6 |
+| Routing | Vue Router 4 |
+| State Management | Pinia |
+| Testing | Vitest + @vue/test-utils |
+| Linting | ESLint |
+
+## Deployment
+
+### Docker
+
+```bash
+docker build -t {{projectName}} .
+docker run -p 80:80 {{projectName}}
+```
+
+### Static Hosting
+
+```bash
+npm run build
+# Serve the dist/ directory via any static host
+```

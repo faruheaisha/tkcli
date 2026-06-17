@@ -1,0 +1,43 @@
+use clap::Parser;
+use std::path::PathBuf;
+use {{projectName}}::config::AppConfig;
+use {{projectName}}::greet::greet;
+
+mod config;
+mod greet;
+
+#[derive(Parser)]
+#[command(name = "{{projectName}}")]
+#[command(about = "{{description}}")]
+#[command(version)]
+struct Cli {
+    /// Name to greet
+    #[arg(default_value = "World")]
+    name: String,
+
+    /// Path to config file
+    #[arg(short, long, value_name = "FILE")]
+    config: Option<PathBuf>,
+}
+
+fn main() {
+    // Initialize tracing
+    tracing_subscriber::fmt()
+        .with_env_filter(
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| "info".into()),
+        )
+        .init();
+
+    let cli = Cli::parse();
+
+    // Optional config loading
+    if let Some(config_path) = &cli.config {
+        match AppConfig::load(config_path) {
+            Ok(cfg) => tracing::info!("Loaded config: {cfg:?}"),
+            Err(e) => eprintln!("Warning: could not load config: {e}"),
+        }
+    }
+
+    println!("{}", greet(&cli.name));
+}

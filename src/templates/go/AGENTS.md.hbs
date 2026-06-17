@@ -1,0 +1,31 @@
+# {{projectName}}
+
+{{description}}
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `make run` | Build and run server |
+| `make build` | Compile binary |
+| `make test` | Run tests |
+| `make clean` | Remove build artifacts |
+| `go run cmd/server/main.go` | Run directly |
+| `go test ./...` | Run all tests |
+
+## Architecture
+
+This project uses **Go + Gin** web framework:
+
+- **cmd/server/main.go** — Application entrypoint
+- **internal/server/server.go** — Gin server setup with routes
+- **internal/server/handlers.go** — Route handlers (CRUD)
+- **internal/server/server_test.go** — Handler tests with httptest
+
+Key conventions:
+
+- Clean architecture with internal package encapsulation
+- `New()` factory creates `*http.Server` for testability
+- `Run()` adds graceful shutdown for production
+- In-memory store (swappable for PostgreSQL via pgx)
+- Standard `{ success, data, error }` JSON response shape

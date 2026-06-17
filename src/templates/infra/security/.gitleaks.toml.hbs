@@ -1,0 +1,21 @@
+# Security scanning configuration for {{projectName}}
+
+# Gitleaks configuration
+# https://github.com/gitleaks/gitleaks
+
+[allowlist]
+  description = "Allowlist for known safe values"
+  paths = [
+    "(?i)test",
+    "(?i)_test",
+    "(?i)spec",
+    "(?i)fixtures",
+  ]
+
+[Rules]
+  [[rules]]
+    description = "Generic High Entropy Secret"
+    regex = '''(?i)(?:secret|token|key|password|credential|api.?key).{0,30}['"'][0-9a-zA-Z!@#$%^&*+=]{16,}['"']'''
+  [[rules]]
+    description = "AWS Access Key"
+    regex = '''(?:A3T[A-Z0-9]|AKIA|ASIA|AROAI|AIDA|AIPA|ANPA|ANVA|APKA)[A-Z0-9]{16}'''

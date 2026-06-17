@@ -1,0 +1,15 @@
+# {{projectName}}
+
+> {{description}}
+
+## AI Coding Rules (Cursor)
+
+### Stack: {{stack}}
+
+- **Build**: `npm run dev` (nuxi dev), `npm run build` (nuxi build)
+- **Test**: `npm test` (vitest + @vue/test-utils)
+- **Structure**: Nuxt 4 — `app/` dir with file-based routing, auto-imports for composables/components
+- **State**: Pinia with `@pinia/nuxt`, auto-imported stores
+- **Server**: Nitro-powered routes in `server/api/`
+- **Tip**: Don't manually import `useState`, `useFetch`, `useHead` — Nuxt auto-imports them
+- **Tip**: Auto-import collisions possible — if a composable name conflicts with a built-in, the built-in wins silently

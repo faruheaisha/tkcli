@@ -1,0 +1,15 @@
+# {{projectName}}
+
+> {{description}}
+
+## AI Coding Rules (Cursor)
+
+### Stack: {{stack}}
+
+- **Build**: `cargo build`, `cargo run`, `cargo check` (fast type-check)
+- **Test**: `cargo test`, `cargo clippy` (lints, must pass before commit)
+- **Structure**: module per concern — `models/`, `handlers/`, `services/`, `db/` under `src/`
+- **Errors**: `thiserror` for library errors, `anyhow` for application code — never `.unwrap()` in prod
+- **Async**: `tokio` runtime, never `std::thread` unless explicitly justified
+- **Ownership**: prefer `&str` over `String` in fn params, references before `.clone()`
+- **Tip**: restructure data to avoid borrow checker fights — `unsafe` is almost never the answer

@@ -1,0 +1,17 @@
+import { z } from 'zod';
+
+const querySchema = z.object({
+  name: z.string().optional().default('World'),
+});
+
+export default defineEventHandler(async (event) => {
+  const query = await getQuery(event);
+  const parsed = querySchema.safeParse(query);
+  if (!parsed.success) {
+    throw createError({ statusCode: 400, message: parsed.error.message });
+  }
+  return {
+    message: `Hello, ${parsed.data.name}!`,
+    timestamp: new Date().toISOString(),
+  };
+});

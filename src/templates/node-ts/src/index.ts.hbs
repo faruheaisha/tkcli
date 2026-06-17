@@ -1,0 +1,28 @@
+import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import { env } from 'node:process';
+
+const PORT = parseInt(env.PORT ?? '3000', 10);
+const HOST = env.HOST ?? '0.0.0.0';
+
+function handleRequest(_req: IncomingMessage, res: ServerResponse): void {
+  res.writeHead(200, { 'content-type': 'application/json' });
+  res.end(JSON.stringify({ status: 'ok', uptime: process.uptime() }));
+}
+
+export const server = createServer(handleRequest);
+
+// Auto-start only when run directly
+const isMain = process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '/'));
+if (isMain) {
+  server.listen(PORT, HOST, () => {
+    console.log(`[server] http://${HOST}:${PORT}`);
+  });
+
+  const shutdown = (signal: string) => {
+    console.log(`[server] ${signal} – closing`);
+    server.close(() => process.exit(0));
+    setTimeout(() => process.exit(1), 10_000).unref();
+  };
+  process.on('SIGINT', () => shutdown('SIGINT'));
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+}

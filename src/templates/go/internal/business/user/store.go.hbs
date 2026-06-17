@@ -1,0 +1,68 @@
+package user
+
+import (
+	"net/http"
+	"sync"
+
+	"github.com/gin-gonic/gin"
+)
+
+// User represents a user entity.
+type User struct {
+	ID    string `json:"id"`
+	Email string `json:"email" binding:"required,email"`
+	Name  string `json:"name" binding:"required"`
+}
+
+// Store is the data access layer for users.
+type Store struct {
+	mu    sync.RWMutex
+	users []User
+	next  int
+}
+
+// NewStore creates an in-memory user store.
+func NewStore() *Store {
+	return &Store{users: []User{}, next: 1}
+}
+
+// List returns all users.
+func (s *Store) List() []User {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	result := make([]User, len(s.users))
+	copy(result, s.users)
+	return result
+}
+
+// Create adds a user after validation.
+func (s *Store) Create(email, name string) User {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	u := User{
+		ID:    formatID(s.next),
+		Email: email,
+		Name:  name,
+	}
+	s.next++
+	s.users = append(s.users, u)
+	return u
+}
+
+func formatID(n int) string {
+	return "usr_" + itoa(n)
+}
+
+func itoa(n int) string {
+	if n == 0 {
+		return "0"
+	}
+	var buf [20]byte
+	i := len(buf)
+	for n > 0 {
+		i--
+		buf[i] = byte('0' + n%10)
+		n /= 10
+	}
+	return string(buf[i:])
+}

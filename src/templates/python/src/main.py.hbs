@@ -1,0 +1,20 @@
+"""Standalone entry point for {{projectName}}.
+
+Usage:
+    python -m {{projectName}}
+"""
+
+import logging
+
+from {{projectName}}.cli import main as cli_main
+from {{projectName}}.logger import setup_logging
+
+
+def main() -> None:
+    """Configure logging and dispatch to the CLI entry point."""
+    setup_logging(logging.INFO)
+    cli_main()
+
+
+if __name__ == "__main__":
+    main()

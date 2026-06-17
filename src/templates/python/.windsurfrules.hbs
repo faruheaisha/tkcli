@@ -1,0 +1,14 @@
+# {{projectName}}
+
+> {{description}}
+
+## Windsurf AI Development Rules
+
+### Stack: {{stack}}
+
+- pyproject.toml build, src/ layout
+- Type hints everywhere — mypy in CI
+- Test: pytest with coverage
+- Virtual env: `.venv/` at project root
+- pathlib over os.path for path handling
+- Avoid mutable default args: `def foo(x=[])` → use `None`

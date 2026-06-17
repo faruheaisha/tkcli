@@ -1,0 +1,19 @@
+# cargo-deny configuration
+[dependencies]
+# Block dependencies with certain advisories
+advisories = { severity = { vulnerability = "deny", unmaintained = "warn", unsound = "deny" } }
+
+[licenses]
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "ISC",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "Unicode-3.0",
+    "CC0-1.0",
+]
+unlicensed = "deny"
+
+[bans]
+multiple-versions = "deny"

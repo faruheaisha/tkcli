@@ -1,0 +1,41 @@
+import 'express-async-errors';
+import express from 'express';
+import { router } from './routes/index.js';
+import { errorHandler } from './middleware/error-handler.js';
+import { requestLogger } from './middleware/request-logger.js';
+
+export function createApp() {
+  const app = express();
+
+  // Trust proxy for correct IP logging behind reverse proxies
+  app.set('trust proxy', 1);
+
+  // Middleware
+  app.use(express.json());
+  app.use(requestLogger);
+
+  // Health check
+  app.get('/health', (_req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  });
+
+  // API routes
+  app.use('/api/v1', router);
+
+  // 404 for unmatched routes
+  app.use((_req, res) => {
+    res.status(404).json({ success: false, error: 'Not found' });
+  });
+
+  // Global error handler
+  app.use(errorHandler);
+
+  return app;
+}
+
+// Start server when run directly
+const port = Number(process.env.PORT) || 3000;
+const app = createApp();
+app.listen(port, '0.0.0.0', () => {
+  console.log(`{{projectName}} running on http://0.0.0.0:${port}`);
+});

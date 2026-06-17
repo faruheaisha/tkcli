@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+import { Command } from 'commander';
+import { readFileSync } from 'fs';
+import chalk from 'chalk';
+
+const program = new Command()
+  .name('{{projectName}}')
+  .description('{{description}}')
+  .version('0.1.0');
+
+// Json — read and format a JSON file (primary example)
+program
+  .command('json')
+  .description('Read and format a JSON file')
+  .argument('<file>', 'path to JSON file')
+  .option('-i, --indent <size>', 'indentation width', '2')
+  .action((file: string, opts: { indent: string }) => {
+    try {
+      const raw = readFileSync(file, 'utf-8');
+      const parsed = JSON.parse(raw);
+      console.log(JSON.stringify(parsed, null, Number(opts.indent)));
+    } catch (err) {
+      console.error(chalk.red(`Error: ${(err as Error).message}`));
+      process.exit(1);
+    }
+  });
+
+// Count — count words in text
+program
+  .command('count')
+  .description('Count characters and words in text')
+  .argument('<text>', 'text to analyze')
+  .action((text: string) => {
+    console.log(chalk.cyan(`Characters: ${text.length}`));
+    console.log(chalk.cyan(`Words: ${text.split(/\s+/).filter(Boolean).length}`));
+  });
+
+program.parse(process.argv);

@@ -1,0 +1,33 @@
+# {{projectName}}
+
+{{description}}
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server (hot reload) |
+| `npm run build` | Production build |
+| `npm test` | Run tests |
+| `npm run lint` | Lint source code |
+
+## Architecture
+
+This project uses **Nuxt 4** with auto-imports and file-based conventions:
+
+- **app/** — All application code (Vue components, pages, layouts)
+- **app/pages/** — File-based routing (each `.vue` file is a route)
+- **server/** — Nitro server engine (API routes, server middleware)
+- **server/api/** — Auto-registered API endpoints
+- **stores/** — Pinia state management (auto-imported)
+- **app/composables/** — Auto-imported Vue composables
+- **app/components/** — Auto-imported Vue components
+
+Key conventions:
+
+- `app/pages/` drives routing — create a file, get a route
+- API routes in `server/api/` return JSON automatically
+- Pinia stores go in `stores/` and are auto-imported by name
+- Composables in `app/composables/` are auto-imported
+- `app/app.vue` is the root component (use `<NuxtLayout>` and `<NuxtPage>`)
+- Layouts in `app/layouts/` wrap pages (use `<NuxtLayout>` in app.vue)

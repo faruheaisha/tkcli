@@ -1,0 +1,27 @@
+.PHONY: all build test clean run lint check
+
+all: build test
+
+build:
+	cargo build
+
+release:
+	cargo build --release
+
+test:
+	cargo test
+
+lint:
+	cargo clippy -- -D warnings
+
+check:
+	cargo check
+
+run:
+	cargo run -- $(ARGS)
+
+clean:
+	cargo clean
+
+docker:
+	docker build -t {{projectName}} .

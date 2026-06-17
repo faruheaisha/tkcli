@@ -1,0 +1,15 @@
+# {{projectName}}
+
+> {{description}}
+
+## AI Coding Rules (Cursor)
+
+### Stack: {{stack}}
+
+- **Build**: `flutter pub get`, `flutter run`, `flutter build`
+- **Test**: `flutter test`, `flutter analyze`
+- **Structure**: Clean Architecture — `features/<name>/data/`, `domain/`, `presentation/`
+- **State**: Riverpod — providers are source of truth, `ref.watch()` for reactivity
+- **Navigation**: GoRouter — central routing config in `router/`
+- **UI**: Material 3 (`useMaterial3: true`), prefer `StatelessWidget` over `StatefulWidget`
+- **Tip**: Extract reusable widgets to `shared/` to avoid deep nesting

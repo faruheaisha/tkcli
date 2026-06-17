@@ -1,0 +1,22 @@
+# Justfile — task runner
+# Install: https://just.systems/man/en/chapter_4.html
+# Run: `just qa` to run all checks
+
+qa: lint typecheck test                         ## Run all checks
+test:                                            ## Run tests with coverage
+    pytest --cov --cov-report=term-missing -x
+lint:                                            ## Lint with Ruff
+    ruff check src/
+typecheck:                                       ## Type-check with mypy
+    mypy src/
+fix:                                             ## Auto-fix lint issues
+    ruff check --fix src/
+coverage:                                        ## Generate coverage report
+    pytest --cov --cov-report=html
+clean:                                           ## Remove cache artifacts
+    -if exist .pytest_cache rmdir /s /q .pytest_cache
+    -if exist __pycache__ rmdir /s /q __pycache__
+    -if exist .mypy_cache rmdir /s /q .mypy_cache
+    -if exist .coverage del /f /q .coverage
+    -if exist htmlcov rmdir /s /q htmlcov
+    -for /r /d %i in (__pycache__) do if exist "%i" rmdir /s /q "%i"

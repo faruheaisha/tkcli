@@ -1,0 +1,84 @@
+# {{projectName}}
+
+{{description}}
+
+## What you need to modify
+
+Your project has 11 files. You only need to care about 3:
+
+| File | What it does | When to edit |
+|------|-------------|-------------|
+| `src/{{projectName}}/cli.py` | CLI commands | **Every time** |
+| `src/{{projectName}}/main.py` | Programmatic entry point | **Every time** |
+| `tests/test_main.py` | Tests for your code | **Every time** |
+| Others (pyproject.toml, Makefile, CI config) | Project infra | Almost never |
+
+## Quick Start
+
+```bash
+# Install with dev dependencies
+pip install -e ".[dev]"
+
+# Run the CLI
+{{projectName}} --help
+```
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `make qa` | Run all checks: lint + type-check + test |
+| `{{projectName}} greet` | Print a greeting |
+| `{{projectName}} sum-numbers 1 2 3` | Sum integers |
+| `pytest` | Run all tests with coverage |
+| `ruff check src/` | Lint source code |
+| `mypy src/` | Type-check source code |
+| `make clean` | Remove cache artifacts |
+
+## Project Structure
+
+```
+├── src/
+│   └── {{projectName}}/
+│       ├── __init__.py      # Package marker & version
+│       ├── __main__.py      # python -m support
+│       ├── main.py          # Entry point (standalone)
+│       ├── cli.py           # Click CLI definition
+│       └── logger.py        # Logging configuration
+├── tests/
+│   └── test_main.py         # Pytest suite (CliRunner)
+├── pyproject.toml            # Build config, deps, tooling
+├── Makefile                  # qa / test / lint / typecheck
+├── AGENTS.md                 # AI coding assistant guide
+├── .github/workflows/ci.yml  # GitHub Actions CI
+├── .python-version           # Pinned Python version
+└── README.md
+```
+
+## Stack
+
+- **Python 3.12+** -- modern type hints, pattern matching
+- **Click** -- composable CLI with built-in help
+- **Requests** -- battle-tested HTTP client
+- **pytest + pytest-cov** -- test runner with coverage
+- **Ruff** -- fast Python linter (E, F, I, N, W, UP, B, SIM)
+- **mypy (strict)** -- static type checking
+- **Hatchling** -- modern PEP 517 build backend
+
+## Testing
+
+```bash
+pytest --cov=src/{{projectName}} --cov-report=term-missing
+```
+
+## Linting and Type Checking
+
+```bash
+make lint
+make typecheck
+```
+
+## CI
+
+Each push runs lint, type-check, and tests via GitHub Actions
+(see `.github/workflows/ci.yml`).

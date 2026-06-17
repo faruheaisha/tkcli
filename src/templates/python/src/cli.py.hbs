@@ -1,0 +1,47 @@
+"""Typer-based CLI for {{projectName}}.
+
+Registered as the console-script entry point in pyproject.toml
+so that ``{{projectName}} --help`` works after ``pip install -e .``.
+"""
+
+import logging
+from typing import Optional
+
+import typer
+
+from {{projectName}}.logger import setup_logging
+
+app = typer.Typer(
+    name="{{projectName}}",
+    help="{{description}}",
+    pretty_exceptions_enable=True,
+)
+logger = logging.getLogger("{{projectName}}.cli")
+
+
+@app.callback()
+def main(
+    verbose: int = typer.Option(0, "--verbose", "-v", count=True, help="Increase verbosity."),
+) -> None:
+    """{{description}}"""
+    level = logging.WARNING - max(verbose * 10, 0)
+    setup_logging(max(level, logging.DEBUG))
+
+
+@app.command()
+def greet(
+    name: str = typer.Option("World", "--name", "-n", help="Who to greet."),
+) -> None:
+    """Greet someone by name."""
+    typer.echo(f"Hello, {name}!")
+    logger.debug("Greeted user %r", name)
+
+
+@app.command()
+def add(
+    numbers: list[int] = typer.Argument(..., help="Numbers to sum."),
+) -> None:
+    """Sum one or more integers and print the result."""
+    total = sum(numbers)
+    typer.echo(f"Sum: {total}")
+    logger.debug("Summed %d numbers: %s", len(numbers), numbers)

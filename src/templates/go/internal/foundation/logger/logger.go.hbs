@@ -1,0 +1,48 @@
+package logger
+
+import (
+	"io"
+	"log"
+	"time"
+
+	"github.com/gin-gonic/gin"
+)
+
+// Logger provides structured logging.
+type Logger struct {
+	logger *log.Logger
+	prefix string
+}
+
+// New creates a new Logger.
+func New(w io.Writer, prefix string) *Logger {
+	return &Logger{
+		logger: log.New(w, "", log.LstdFlags),
+		prefix: prefix,
+	}
+}
+
+// Info logs an info message.
+func (l *Logger) Info(msg string, keysAndValues ...interface{}) {
+	l.logger.Printf("[INFO] %s: %s %v", l.prefix, msg, keysAndValues)
+}
+
+// Error logs an error message.
+func (l *Logger) Error(msg string, err error, keysAndValues ...interface{}) {
+	l.logger.Printf("[ERROR] %s: %s - %v %v", l.prefix, msg, err, keysAndValues)
+}
+
+// Middleware returns Gin middleware for request logging.
+func Middleware(l *Logger) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start := time.Now()
+		c.Next()
+		duration := time.Since(start)
+		l.Info("request",
+			"method", c.Request.Method,
+			"path", c.Request.URL.Path,
+			"status", c.Writer.Status(),
+			"duration", duration.String(),
+		)
+	}
+}

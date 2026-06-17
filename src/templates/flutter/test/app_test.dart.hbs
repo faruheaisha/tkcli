@@ -1,0 +1,51 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:{{projectName}}/app/app.dart';
+import 'package:{{projectName}}/counter/counter.dart';
+
+void main() {
+  group('App', () {
+    testWidgets('renders counter page', (tester) async {
+      await tester.pumpWidget(const ProviderScope(child: {{projectName}}App()));
+      expect(find.text('Counter'), findsOneWidget);
+    });
+  });
+
+  group('CounterNotifier', () {
+    test('starts at 0', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      expect(container.read(counterProvider), 0);
+    });
+
+    test('increments', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      container.read(counterProvider.notifier).increment();
+      expect(container.read(counterProvider), 1);
+    });
+
+    test('decrements', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      container.read(counterProvider.notifier).decrement();
+      expect(container.read(counterProvider), -1);
+    });
+
+    test('resets', () {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      container.read(counterProvider.notifier).increment();
+      container.read(counterProvider.notifier).increment();
+      container.read(counterProvider.notifier).reset();
+      expect(container.read(counterProvider), 0);
+    });
+  });
+
+  group('CounterPage navigation', () {
+    testWidgets('increment button exists', (tester) async {
+      await tester.pumpWidget(const ProviderScope(child: {{projectName}}App()));
+      expect(find.byIcon(IconData(0xe5cc, fontFamily: 'MaterialIcons')), findsOneWidget);
+    });
+  });
+}

@@ -1,0 +1,14 @@
+# {{projectName}}
+
+> {{description}}
+
+## Windsurf AI Development Rules
+
+### Stack: {{stack}}
+
+- Go 1.23, standard project layout: cmd/ + internal/ + pkg/
+- slog for structured logging — never global loggers
+- Error wrapping: `fmt.Errorf("context: %w", err)`
+- Table-driven tests with `testing` package
+- No global state — constructor injection only
+- Concurrency: `sync.WaitGroup` or `errgroup`, not `time.Sleep`

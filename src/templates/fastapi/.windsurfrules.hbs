@@ -1,0 +1,14 @@
+# {{projectName}}
+
+> {{description}}
+
+## Windsurf AI Development Rules
+
+### Stack: {{stack}}
+
+- FastAPI, Pydantic v2, SQLAlchemy async
+- All route handlers async with async SQLAlchemy sessions
+- Alembic for migrations — generate, don't manual
+- Type hints everywhere — FastAPI relies on them for OpenAPI
+- Test: pytest + httpx async test client
+- Response validation via Pydantic v2 response models

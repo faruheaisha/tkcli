@@ -1,0 +1,31 @@
+from typing import List, Optional
+
+from pydantic import BaseModel, EmailStr
+
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    name: str
+
+
+class UserResponse(BaseModel):
+    id: int
+    email: EmailStr
+    name: str
+
+    model_config = {"from_attributes": True}
+
+
+class HealthResponse(BaseModel):
+    status: str
+
+
+class ErrorResponse(BaseModel):
+    detail: str
+
+
+class PaginatedResponse(BaseModel):
+    items: List[UserResponse]
+    total: int
+    page: int
+    page_size: int

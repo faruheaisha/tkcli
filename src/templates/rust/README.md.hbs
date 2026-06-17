@@ -1,0 +1,67 @@
+# {{projectName}}
+
+{{description}}
+
+## What you need to modify
+
+Your project has 6 files. You only need to care about 3:
+
+| File | What it does | When to edit |
+|------|-------------|-------------|
+| `src/main.rs` | CLI entry point (clap commands) | **Every time** |
+| `src/lib.rs` | Shared library functions | **Every time** |
+| `tests/integration_test.rs` | Integration tests | **Every time** |
+| Others (Cargo.toml, Makefile, Dockerfile) | Project infra | Almost never |
+
+## Quick Start
+
+```bash
+cargo run -- --name World
+```
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `cargo run -- <args>` | Run with arguments |
+| `cargo build` | Build for production |
+| `cargo test` | Run all tests |
+| `cargo clippy` | Lint with Clippy |
+| `make build` | Build release binary (via Makefile) |
+| `make docker` | Build Docker image |
+
+## Project Structure
+
+```
+├── src/
+│   ├── main.rs             # CLI entry point (clap)
+│   └── lib.rs              # Library functions
+├── tests/
+│   └── integration_test.rs # Integration tests
+├── Cargo.toml               # Rust package manifest
+├── Makefile                 # Build and Docker helpers
+├── Dockerfile               # Multi-stage production build
+└── README.md
+```
+
+## Stack
+
+| Layer | Technology |
+|-------|------------|
+| Language | Rust (edition 2021) |
+| CLI | clap (derive) |
+| Async Runtime | tokio (full) |
+| Logging | tracing + tracing-subscriber |
+
+## Commands
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `{{projectName}}` | `[name]` (default: World) | Print a greeting |
+
+## Deployment
+
+```bash
+make docker
+docker run --rm {{projectName}}
+```

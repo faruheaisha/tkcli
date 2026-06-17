@@ -1,0 +1,28 @@
+# {{projectName}}
+
+{{description}}
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server (Vite HMR) |
+| `npm run build` | Type-check + production build |
+| `npm test` | Run tests |
+| `npm run lint` | Lint source code |
+
+## Architecture
+
+This project uses **React 19 + Vite 6** with file-based routing patterns:
+
+- **src/pages/** — Page components (lazy-loaded by route)
+- **src/routes/index.ts** — router definition (createBrowserRouter)
+- **src/App.tsx** — Root layout with `<Outlet />`
+- **tests/** — Vitest + @testing-library/react
+
+Key conventions:
+
+- Route definitions go in `src/routes/`, pages in `src/pages/`
+- Data fetching uses TanStack Query (`useQuery` / `useMutation`)
+- All components use standard TypeScript + React patterns
+- Tests are co-located in `tests/` matching the `src/` structure

@@ -1,0 +1,16 @@
+# {{projectName}}
+
+> {{description}}
+
+## AI Coding Rules (Cursor)
+
+### Stack: {{stack}}
+
+- **Build**: `npm run dev` (tsx watch), `npm run build` (tsc), `npm start` (node dist/index.js)
+- **Test**: `npm test` (vitest + supertest)
+- **Structure**: routes (thin) → controllers (validation via Zod) → services (business logic) → repositories (Prisma)
+- **Routing**: Express 5 routers in `src/routes/`, organized by resource
+- **DB**: Prisma ORM — always use migrations (`prisma migrate dev`), never `prisma db push` in prod
+- **Response format**: `{ success: boolean, data?: T, error?: string }`
+- **Error handling**: error middleware catches all — never try/catch in individual route handlers
+- **Deps**: `express@5`, `zod`, `@prisma/client`, `prisma`

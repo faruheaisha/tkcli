@@ -1,0 +1,104 @@
+use serde::Deserialize;
+use std::path::Path;
+
+#[derive(Debug, Deserialize)]
+pub struct AppConfig {
+    pub name: String,
+    #[serde(default = "default_host")]
+    pub host: String,
+    #[serde(default = "default_port")]
+    pub port: u16,
+}
+
+fn default_host() -> String {
+    "127.0.0.1".to_string()
+}
+
+fn default_port() -> u16 {
+    8080
+}
+
+impl AppConfig {
+    pub fn load(path: &Path) -> Result<Self, config::ConfigError> {
+        let cfg = config::Config::builder()
+            .add_source(config::File::from(path))
+            .build()?;
+        cfg.try_deserialize()
+    }
+}
+
+/// Wrapper to keep ConfigError out of public API.
+mod config {
+    #[derive(Debug)]
+    pub enum ConfigError {
+        Io(std::io::Error),
+        Parse(String),
+    }
+
+    impl std::fmt::Display for ConfigError {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            match self {
+                Self::Io(e) => write!(f, "IO error: {e}"),
+                Self::Parse(s) => write!(f, "Parse error: {s}"),
+            }
+        }
+    }
+
+    impl std::error::Error for ConfigError {}
+
+    impl From<std::io::Error> for ConfigError {
+        fn from(e: std::io::Error) -> Self {
+            Self::Io(e)
+        }
+    }
+}
+
+impl AppConfig {
+    /// Load config from a TOML file path.
+    pub fn load(path: &Path) -> Result<Self, ConfigError> {
+        let content = std::fs::read_to_string(path)?;
+        let cfg: Self =
+            toml::from_str(&content).map_err(|e| ConfigError::Parse(e.to_string()))?;
+        Ok(cfg)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::Write;
+
+    #[test]
+    fn test_load_valid_config() {
+        let mut f = tempfile::NamedTempFile::new().unwrap();
+        write!(
+            f,
+            r#"
+name = "test"
+host = "0.0.0.0"
+port = 3000
+"#
+        )
+        .unwrap();
+        let cfg = AppConfig::load(f.path()).unwrap();
+        assert_eq!(cfg.name, "test");
+        assert_eq!(cfg.host, "0.0.0.0");
+        assert_eq!(cfg.port, 3000);
+    }
+
+    #[test]
+    fn test_load_config_defaults() {
+        let mut f = tempfile::NamedTempFile::new().unwrap();
+        write!(f, r#"name = "minimal""#).unwrap();
+        let cfg = AppConfig::load(f.path()).unwrap();
+        assert_eq!(cfg.name, "minimal");
+        assert_eq!(cfg.host, "127.0.0.1"); // default
+        assert_eq!(cfg.port, 8080); // default
+    }
+
+    #[test]
+    fn test_load_missing_file() {
+        let err = AppConfig::load(Path::new("/nonexistent/config.toml")).unwrap_err();
+        assert!(matches!(err, ConfigError::Io(_)));
+    }
+}

@@ -1,0 +1,29 @@
+# {{projectName}}
+
+{{description}}
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `make build` | Compile project |
+| `make run` | Run project |
+| `make test` | Run tests |
+| `make clean` | Remove build artifacts |
+| `cargo test` | Run Rust tests directly |
+
+## Architecture
+
+This project uses **Rust** with a library + binary pattern:
+
+- **src/main.rs** — Binary entrypoint
+- **src/lib.rs** — Library crate with shared logic
+- **tests/integration_test.rs** — Integration tests
+
+Key conventions:
+
+- Library-first design (logic in lib.rs, thin main.rs)
+- Unit tests in `src/lib.rs` via `#[cfg(test)]`
+- Integration tests in `tests/` directory
+- `cargo check` for fast compilation verification
+- Uses stable Rust edition (2021)

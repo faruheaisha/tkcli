@@ -1,0 +1,16 @@
+# {{projectName}}
+
+> {{description}}
+
+## AI Coding Rules (Cursor)
+
+### Stack: {{stack}}
+
+- **Build**: `npm run dev` (Vite), `npm run build` (tsc + vite build)
+- **Test**: `npm test` (vitest + jsdom), `npm run test:watch`
+- **Structure**: Feature-first under `src/features/`, shared components in `src/shared/`
+- **State**: TanStack Query for server data, React context or URL for client state — no Redux
+- **Routing**: React Router 7, define routes in a central config
+- **Deps**: `react@19`, `react-dom@19`, `react-router@7`, `@tanstack/react-query@5`
+- **DevDeps**: `vite`, `@vitejs/plugin-react`, `vitest`, `@testing-library/react`, `jsdom`
+- **Tip**: CSS Modules or Tailwind — never inline styles

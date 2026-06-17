@@ -1,0 +1,19 @@
+.PHONY: build run test clean lint vet
+
+build:
+	go build -o bin/{{projectName}} ./cmd/server
+
+run:
+	go run ./cmd/server
+
+test:
+	go test ./... -v -count=1 -race
+
+lint:
+	golangci-lint run ./...
+
+vet:
+	go vet ./...
+
+clean:
+	-if exist bin rmdir /s /q bin

@@ -1,0 +1,29 @@
+# {{projectName}}
+
+{{description}}
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server (Vite HMR) |
+| `npm run build` | Type-check + production build |
+| `npm test` | Run tests |
+| `npm run lint` | Lint source code |
+
+## Architecture
+
+This project uses **Vue 3 + Vite 6** with file-based routing:
+
+- **src/pages/** — Page components (lazy-loaded by route)
+- **src/stores/** — Pinia state management
+- **src/router/index.ts** — Vue Router configuration
+- **tests/** — Vitest + @vue/test-utils
+
+Key conventions:
+
+- Routes are defined in `src/router/`, pages in `src/pages/`
+- State is managed via Pinia stores (one file per domain)
+- Components use `<script setup lang="ts">` composition API
+- Composables go in `src/composables/` for reusable logic
+- Auto-imports are not used — everything is explicit

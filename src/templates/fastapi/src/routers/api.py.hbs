@@ -1,0 +1,56 @@
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import func, select
+from sqlalchemy.orm import Session
+
+from src.database import UserModel, get_db
+from src.schemas import (
+    ErrorResponse,
+    HealthResponse,
+    PaginatedResponse,
+    UserCreate,
+    UserResponse,
+)
+
+router = APIRouter()
+
+
+@router.get("/health", response_model=HealthResponse)
+def health():
+    return HealthResponse(status="ok")
+
+
+@router.get("/users", response_model=PaginatedResponse)
+def list_users(
+    page: int = Query(1, ge=1),
+    page_size: int = Query(20, ge=1, le=100),
+    db: Session = Depends(get_db),
+):
+    stmt = select(UserModel).offset((page - 1) * page_size).limit(page_size)
+    users = db.execute(stmt).scalars().all()
+    total = db.execute(select(func.count(UserModel.id))).scalar() or 0
+    return PaginatedResponse(
+        items=[UserResponse(id=u.id, email=u.email, name=u.name) for u in users],
+        total=total,
+        page=page,
+        page_size=page_size,
+    )
+
+
+@router.post(
+    "/users",
+    response_model=UserResponse,
+    status_code=201,
+    responses={400: {"model": ErrorResponse}},
+)
+def create_user(payload: UserCreate, db: Session = Depends(get_db)):
+    existing = db.execute(
+        select(UserModel).where(UserModel.email == payload.email)
+    ).scalar_one_or_none()
+    if existing:
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+    user = UserModel(email=payload.email, name=payload.name)
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return UserResponse(id=user.id, email=user.email, name=user.name)

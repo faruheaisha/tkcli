@@ -1,0 +1,76 @@
+# {{projectName}}
+
+{{description}}
+
+A production-ready Go API with Gin framework.
+
+## What you need to modify
+
+Your project has 9 files. You only need to care about 3:
+
+| File | What it does | When to edit |
+|------|-------------|-------------|
+| `internal/server/handlers.go` | Route handlers and validation | **Every time** |
+| `internal/server/server_test.go` | Tests for your handlers | **Every time** |
+| `cmd/server/main.go` | Entry point, server wiring | Rarely |
+| Others (Makefile, Dockerfile, go.mod) | Project infra | Almost never |
+
+## Quick Start
+
+```bash
+go mod tidy
+go run ./cmd/server
+```
+
+Visit **http://localhost:8080/health** to verify the server is running.
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `make build` | Build binary to `./bin/{{projectName}}` |
+| `make run` | Run the server |
+| `make test` | Run all tests |
+| `make clean` | Remove build artifacts |
+
+## Project Structure
+
+```
+├── cmd/
+│   └── server/
+│       └── main.go        # Entry point
+├── internal/
+│   └── server/
+│       ├── server.go       # HTTP server setup + graceful shutdown
+│       ├── handlers.go     # Route handlers with validation
+│       └── server_test.go  # Integration tests
+├── go.mod
+├── Makefile
+├── Dockerfile
+└── README.md
+```
+
+## API Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/health` | Health check |
+| GET | `/api/v1/users` | List all users |
+| POST | `/api/v1/users` | Create a user (`email`, `name`) |
+
+## Stack
+
+- **Runtime**: Go 1.23
+- **Web framework**: Gin (router, middleware, validation)
+- **Database driver**: pgx (PostgreSQL — configure in production)
+- **Logging**: zerolog (structured JSON logs)
+- **CLI scaffolding**: cobra (for extended CLI needs)
+- **Testing**: testing package + testify
+
+## Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ADDR` | `:8080` | Server listen address |
+| `GIN_MODE` | `debug` | Set to `release` in production |
+| `DATABASE_URL` | — | PostgreSQL connection string |

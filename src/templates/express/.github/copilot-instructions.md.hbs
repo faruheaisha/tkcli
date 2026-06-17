@@ -1,0 +1,8 @@
+# {{projectName}}
+# Stack: {{stack}}
+
+This project uses Express 5 with Prisma ORM and Zod validation.
+Layered: routes → services → repositories. Error middleware catches all.
+Express 5 routers in src/routes/. Vitest + supertest for testing.
+Prisma: always use migrations in dev, never db push.
+Response format: `{ success, data?, error? }`.

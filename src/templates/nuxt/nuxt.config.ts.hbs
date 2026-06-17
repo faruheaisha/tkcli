@@ -1,0 +1,19 @@
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+  devtools: { enabled: true },
+
+  modules: ["@pinia/nuxt"],
+
+  srcDir: "app",
+
+  compatibilityDate: "2026-06-01",
+
+  typescript: {
+    strict: true,
+    typeCheck: true,
+  },
+
+  nitro: {
+    preset: "node-server",
+  },
+});

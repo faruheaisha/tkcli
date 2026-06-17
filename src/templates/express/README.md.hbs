@@ -1,0 +1,86 @@
+# {{projectName}}
+
+{{description}}
+
+Express 5 + TypeScript API with Zod validation.
+
+## What you need to modify
+
+Your project has 12 files. You only need to care about 3:
+
+| File | What it does | When to edit |
+|------|-------------|-------------|
+| `src/routes/index.ts` | All your API endpoints | **Every time** |
+| `src/index.ts` | App setup + middleware wiring | Only when adding middleware |
+| `tests/app.test.ts` | Tests for your endpoints | **Every time** |
+| Others (eslint config, Docker, CI, AGENTS.md) | Project infrastructure | Almost never |
+
+## Quick Start
+
+```bash
+npm install
+npm run dev
+```
+
+The server starts at **http://localhost:3000/health**.
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server with hot reload (`tsx watch`) |
+| `npm run build` | Compile TypeScript to `dist/` |
+| `npm start` | Run compiled production code |
+| `npm test` | Run tests once (Vitest) |
+| `npm run test:watch` | Run tests in watch mode |
+
+## Project Structure
+
+```
+src/
+├── index.ts             # App entry, server bootstrap
+├── routes/
+│   └── index.ts         # API route definitions
+├── middleware/
+│   ├── error-handler.ts # Global error handler + HttpError class
+│   └── request-logger.ts# Request logging middleware
+```
+
+## API Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/health` | Health check with timestamp |
+| POST | `/api/v1/hello` | Greet a user (validates `name`) |
+| GET | `/api/v1/error-example` | Sample error (for testing the error handler) |
+
+## Adding Infra
+
+```bash
+# Add Dockerfile + docker-compose
+tk add docker
+
+# Add CI workflow
+tk add ci
+
+# Add gitleaks + pre-commit
+tk add security
+
+# Add Prisma database
+tk add express-prisma
+```
+
+## Stack
+
+- **Runtime**: Express 5 + TypeScript
+- **Validation**: Zod (request/response validation at route boundary)
+- **Testing**: Vitest + Supertest (integration tests against the real app)
+- **Middleware layers**: JSON parser, request logging, error handling
+- **Response format**: `{ success: boolean, data?: T, error?: string }`
+
+## Error Conventions
+
+- Routes throw `HttpError` (src/middleware/error-handler.ts) for known error cases
+- Global error handler catches everything and returns `{ success: false, error }`
+- Validation errors include `details` field with field-level error messages
+- Unmatched routes return 404 via dedicated middleware

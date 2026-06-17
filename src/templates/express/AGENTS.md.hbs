@@ -1,0 +1,30 @@
+# {{projectName}}
+
+{{description}}
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server (tsx watch) |
+| `npm run build` | Compile TypeScript |
+| `npm start` | Run compiled production build |
+| `npm test` | Run tests (Vitest + Supertest) |
+| `npm run test:watch` | Tests in watch mode |
+
+## Architecture
+
+This project uses **Express 5 + TypeScript** with layered middleware:
+
+- **src/index.ts** — `createApp()` factory + server bootstrap
+- **src/routes/index.ts** — API route handlers with Zod validation
+- **src/middleware/** — Request logging, error handling, CORS
+- **tests/** — Integration tests with Supertest against `createApp()`
+
+Key conventions:
+
+- Routes return `{ success: boolean, data?: T, error?: string }`
+- Input validation at the route boundary via Zod schemas
+- Known errors throw `HttpError` (caught by global error handler)
+- Unknown errors return 500 with no details leaked
+- The app is created via `createApp()` factory for testability

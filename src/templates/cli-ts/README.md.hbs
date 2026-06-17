@@ -1,0 +1,59 @@
+# {{projectName}}
+
+{{description}}
+
+A production-ready TypeScript CLI built with Commander.js and chalk.
+
+## What you need to modify
+
+Your project has 7 files. You only need to care about 2:
+
+| File | What it does | When to edit |
+|------|-------------|-------------|
+| `src/index.ts` | All your CLI commands live here | **Every time** |
+| `tests/index.test.ts` | Tests for your commands | **Every time** |
+| `package.json` | Dependencies + scripts | Only when adding packages |
+| `tsconfig.json` | TypeScript config | Almost never |
+| `eslint.config.mjs` | Linting rules | Almost never |
+| `README.md` | This file | Before publishing |
+| `AGENTS.md` | AI assistant instructions | Only if changing conventions |
+
+## Quick Start
+
+```bash
+npm install
+npm run dev -- json package.json   # format this file as JSON
+npm run dev -- count "hello world" # count words
+```
+
+## Project Structure
+
+```
+src/
+├── index.ts          # Entry point, Commander setup, all commands
+tests/
+├── index.test.ts     # Integration tests (subprocess execution)
+```
+
+## Commands
+
+| Command | Arguments | Description |
+|---------|-----------|-------------|
+| `json` | `<file>` (required) | Read and format a JSON file |
+| `count` | `<text>` (required) | Count characters and words |
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev -- <args>` | Dev mode with hot reload |
+| `npm run build` | Compile to `dist/` |
+| `npm start -- <args>` | Run compiled binary |
+| `npm test` | Run tests |
+| `npm run test:watch` | Watch mode tests |
+
+## Stack
+
+- **Runtime**: Node.js + TypeScript (ESM)
+- **CLI framework**: Commander.js (argument parsing, subcommands, help)
+- **Testing**: Vitest (CLI integration tests via execSync)

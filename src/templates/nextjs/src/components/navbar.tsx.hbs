@@ -1,0 +1,30 @@
+import Link from 'next/link';
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/server-data', label: 'Server Data' },
+  { href: '/about', label: 'About' },
+];
+
+export function Navbar() {
+  return (
+    <nav className="border-b">
+      <div className="max-w-4xl mx-auto px-4 h-14 flex items-center gap-6">
+        <Link href="/" className="font-bold text-lg">
+          {{projectName}}
+        </Link>
+        <div className="flex gap-4">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-sm text-gray-600 hover:text-black transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </nav>
+  );
+}

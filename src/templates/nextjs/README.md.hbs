@@ -1,0 +1,70 @@
+# {{projectName}}
+
+{{description}}
+
+## What you need to modify
+
+Your project has 9 files. You only need to care about 3:
+
+| File | What it does | When to edit |
+|------|-------------|-------------|
+| `src/app/page.tsx` | Home page | **Every time** |
+| `src/app/` (your routes) | App Router pages and API routes | **Every time** |
+| `tests/` | Tests for components and routes | **Every time** |
+| Others (next.config.ts, ESLint) | Project infra | Almost never |
+
+## Quick Start
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server (Turbopack) |
+| `npm run build` | Build for production |
+| `npm start` | Run production build |
+| `npm test` | Run tests once (Vitest) |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run lint` | Lint with ESLint |
+
+## Project Structure
+
+```
+├── src/
+│   └── app/
+│       ├── layout.tsx         # Root layout with font, metadata
+│       ├── page.tsx           # Home page
+│       ├── globals.css        # Global styles
+│       └── favicon.ico
+├── tests/
+│   └── example.test.tsx       # Component tests (Vitest + Testing Library)
+├── public/                    # Static assets
+├── next.config.ts             # Next.js config (Turbopack default)
+├── package.json
+└── README.md
+```
+
+## Stack
+
+| Layer | Technology |
+|-------|------------|
+| Framework | Next.js 16 (App Router, Turbopack) |
+| UI Library | React 19 |
+| Language | TypeScript (strict) |
+| Testing | Vitest + @testing-library/react |
+| Linting | ESLint |
+
+## Deployment
+
+Deploy to **Vercel** with zero config:
+
+```bash
+npm run build
+npx vercel deploy
+```

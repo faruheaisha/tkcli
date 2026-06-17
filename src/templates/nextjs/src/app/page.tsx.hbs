@@ -1,0 +1,35 @@
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <main>
+      <section>
+        <h1>{`{{projectName}}`}</h1>
+        <p>{`{{description}}`}</p>
+      </section>
+
+      <section>
+        <h2>Getting Started</h2>
+        <ol>
+          <li>
+            Edit <code>src/app/page.tsx</code> to change this page.
+          </li>
+          <li>
+            Edit <code>src/app/layout.tsx</code> to change the root layout.
+          </li>
+          <li>
+            Add new routes by creating files in <code>src/app/</code>.
+          </li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Resources</h2>
+        <ul>
+          <li><Link href="https://nextjs.org/docs">Next.js Docs</Link></li>
+          <li><Link href="https://react.dev">React Docs</Link></li>
+        </ul>
+      </section>
+    </main>
+  );
+}

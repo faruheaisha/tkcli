@@ -1,0 +1,31 @@
+# {{projectName}}
+
+{{description}}
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `flutter pub get` | Install dependencies |
+| `flutter run` | Run on connected device |
+| `flutter test` | Run all tests |
+| `flutter analyze` | Lint and static analysis |
+| `flutter gen-l10n` | Generate localization code |
+| `flutter build apk` | Build Android APK |
+| `flutter build ios` | Build iOS (macOS only) |
+
+## Architecture
+
+This project uses **feature-based architecture** with Riverpod for state management:
+
+- **lib/{{projectName}}/app/** — App shell, routing (GoRouter)
+- **lib/{{projectName}}/counter/** — Counter feature: provider + view
+- **test/** — Mirror of lib/, unit + widget tests
+
+Key conventions:
+
+- Each feature owns its state (provider) and UI (view/) in one directory
+- State is managed via Riverpod `StateNotifierProvider`
+- All widgets use `const` constructors and `super.key`
+- No `print()` — use a logging service for production
+- Tests cover both provider logic (unit) and widget rendering (widget test)

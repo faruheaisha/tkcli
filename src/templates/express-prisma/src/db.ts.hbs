@@ -1,0 +1,5 @@
+// Database client singleton — instantiate once, reuse across requests.
+// Prisma handles connection pooling internally.
+import { PrismaClient } from "@prisma/client";
+
+export const prisma = new PrismaClient();

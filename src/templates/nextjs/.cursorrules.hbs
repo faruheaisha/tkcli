@@ -1,0 +1,15 @@
+# {{projectName}}
+
+> {{description}}
+
+## AI Coding Rules (Cursor)
+
+### Stack: {{stack}}
+
+- **Build**: `npm run dev`, `npm run build` (next build)
+- **Test**: `npm test` (vitest + @testing-library/react + jsdom)
+- **Structure**: App Router — `app/layout.tsx`, `app/page.tsx`, `app/api/` route handlers
+- **Rendering**: Server Components by default — `'use client'` only when interactivity required
+- **Data**: fetch in Server Components and pass down; Server Actions (`'use server'`) for mutations
+- **Caching**: Next.js caches aggressively by default — use `revalidate` or `force-dynamic` explicitly
+- **Tip**: Push `'use client'` boundaries as deep as possible — minimize client component surface

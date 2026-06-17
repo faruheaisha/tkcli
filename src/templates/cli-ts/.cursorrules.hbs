@@ -1,0 +1,16 @@
+# {{projectName}}
+
+> {{description}}
+
+## AI Coding Rules (Cursor)
+
+### Stack: {{stack}}
+
+- **Build**: `npm run build` (tsc), `npm run dev -- <args>` (tsx)
+- **Test**: `npm test` (vitest with mocked stdout/stdin)
+- **Structure**: `cli.ts` (commander setup) → `commands/` (subcommand modules) → `services/` (logic)
+- **Args**: Commander.js for argument parsing — support both `--flag` and subcommand patterns
+- **Exit**: always non-zero on failure for CI pipeline compatibility
+- **Output**: chalk for colored output, never raw ANSI codes
+- **Tip**: handle SIGINT/SIGTERM for clean shutdown on long-running tasks
+- **Tip**: use `path.join()` not string concat — Windows-compatible paths
