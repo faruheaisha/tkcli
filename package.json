@@ -1,7 +1,7 @@
 {
   "name": "tkcli",
   "version": "0.1.0",
-  "description": "Project harness generator for AI-assisted development — scaffold, compose, and configure across 13 stacks",
+  "description": "Project harness generator for AI-assisted development — scaffold, compose, and configure across 14 stacks",
   "type": "module",
   "bin": {
     "tk": "./dist/index.js"

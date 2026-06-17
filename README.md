@@ -10,7 +10,7 @@ Instead of telling it every time, **tk generates the harness** — CLAUDE.md, AG
 
 - **Starting a new project** and want AI-assisted development that works out of the box
 - **Working across multiple tech stacks** — tk is the only tool with 14 stack templates and multi-stack composition
-- **Need I-to generate a fullstack app** — `tk quick app --stack nextjs --components express` merges both stacks into one project
+- **Need to generate a fullstack app** — `tk quick app --stack nextjs --components express` merges both stacks into one project
 - **Adding AI context to an existing project** — `tk init` detects the stack and injects config files
 
 ## Quick Start
@@ -39,7 +39,6 @@ tk quick my-api --dry-run                   # Preview before writing
 | `cli-ts` | `npm run dev -- hello` | TypeScript CLI tools |
 | `mcp-server` | `npm run dev` | Model Context Protocol servers (TS SDK, stdio) |
 | `python` | `python src/main.py` | Python scripts/libs |
-| `generic` | — | Custom project skeleton |
 
 ## What you get with `tk quick`
 
@@ -73,7 +72,7 @@ my-app/
 - **14 stack templates** — from Rust to Flutter, each with AI config tuned to the stack
 - **Multi-stack composition** — `tk quick app --stack nextjs --components express` merges stacks
 - **Per-stack IDE rules** — `.cursorrules` and `.windsurfrules` differ by stack (not one-size-fits-all)
-- **`.claude/settings.json`** — permission allowlist + MCP placeholder for Claude Code
+- **`.claude/settings.json`** — valid Claude Code config with per-stack tailored permissions (a node project never ships cargo/flutter rules)
 - **copilot-instructions.md** — GitHub Copilot context matching the stack
 - **Infra addons** — `--addons docker,ci,security` for Dockerfile, CI workflow, gitleaks
 - **`tk init`** — add AI context to existing projects (auto-detects stack)

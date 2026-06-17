@@ -18,7 +18,7 @@ This project uses **Commander.js** for CLI and **Handlebars** for template rende
 
 - **src/commands/quick/scaffold.ts** — Core scaffold logic: copy templates, render .hbs, error rollback, git init, npm install
 - **src/commands/quick/composer.ts** — Multi-stack composition: merge package.json, merge templates
-- **src/commands/quick/stacks.ts** — 13 stack definitions with toolchain metadata
+- **src/commands/quick/stacks.ts** — 14 stack definitions with toolchain metadata
 - **src/templates/** — Per-stack Handlebars templates (`.hbs`), rendered with `{{projectName}}`, `{{description}}`, `{{stack}}`, `{{year}}`
 
 ### Template Convention

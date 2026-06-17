@@ -1,6 +1,6 @@
 # tk — AI developer toolkit
 
-> AI-ready project scaffolding across 13 stacks (Node.js, Express, React, Vue, Next.js, Nuxt, FastAPI, Python, Rust, Go, Flutter, CLI, Generic)
+> AI-ready project scaffolding across 14 stacks (Node.js, Express, React, Vue, Next.js, Nuxt, FastAPI, Python, Rust, Go, Flutter, CLI, MCP Server)
 
 ## AI Development Context
 
@@ -49,7 +49,7 @@ src/
 
 - **scaffold.ts** `~335 lines` — core: `copyTemplates()`, `copyInfraModule()`, `scaffold()`, error rollback
 - **composer.ts** `~130 lines` — `mergePackageJson()`, `composeScaffold()` for multi-stack projects
-- **stacks.ts** `~110 lines` — 13 stack definitions with toolchain metadata
+- **stacks.ts** `~120 lines` — 14 stack definitions with toolchain metadata
 
 ### Template Convention
 

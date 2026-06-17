@@ -109,6 +109,24 @@ describe('generation validity — guards against broken AI context', () => {
     });
   }
 
+  it('npm stacks generate a buildable package.json (valid JSON, build + test scripts)', async () => {
+    const { scaffold } = await import('../src/commands/quick/scaffold.js');
+    const npmStacks = ['node-ts', 'react-spa', 'vue', 'nuxt', 'express', 'nextjs', 'cli-ts', 'mcp-server'];
+    for (const stack of npmStacks) {
+      const dir = tmpDir();
+      await scaffold({
+        projectName: 'pkg', description: 'x', stack,
+        targetDir: join(dir, 'p'), includeAi: false, initGit: false, installDeps: false,
+      });
+      const pkgRaw = readFileSync(join(dir, 'p', 'package.json'), 'utf-8');
+      const pkg = JSON.parse(pkgRaw); // throws if invalid JSON
+      expect(typeof pkg.scripts?.build, `${stack} missing build script`).toBe('string');
+      expect(typeof pkg.scripts?.test, `${stack} missing test script`).toBe('string');
+      // The build entry referenced by tsc/tsup/vite must have a real source entry on disk.
+      expect(existsSync(join(dir, 'p', 'src')) || existsSync(join(dir, 'p', 'app')), `${stack} has no source dir`).toBe(true);
+    }
+  });
+
   it('tailors permissions per stack — no foreign toolchains', async () => {
     const { scaffold } = await import('../src/commands/quick/scaffold.js');
     const readAllow = async (stack: string): Promise<string[]> => {
