@@ -14,6 +14,7 @@ export const quickCommand = new Command('quick')
   .option('--stack <type>', 'Project stack')
   .option('--components <list>', 'Additional component stacks (comma-separated, e.g. "express,react-spa")')
   .option('--addons <list>', 'Infra addons to include (comma-separated: docker,ci,security)')
+  .option('--auto-sync', 'Add a Claude Code SessionStart hook that keeps CLAUDE.md synced each session')
   .option('--description <text>', 'Project description')
   .option('--no-ai', 'Skip AI context files (CLAUDE.md, .editorconfig)')
   .option('--no-git', 'Skip git initialization')
@@ -129,6 +130,7 @@ Example:
         dryRun: options.dryRun as boolean | undefined,
         components: opts.components,
         addons: opts.addons,
+        autoSync: options.autoSync as boolean | undefined,
       });
 
       // Learn from this scaffold so future runs default to your habits (local only).

@@ -115,6 +115,18 @@ Run `tk sync` anytime your project structure changes and the managed region upda
 to reflect reality — so your AI agent never reads a stale or hallucinated layout.
 Your Project Notes are always preserved.
 
+### Auto-sync every session (opt-in)
+
+Pass `--auto-sync` to `tk quick` and tk drops a Claude Code **SessionStart hook** into
+`.claude/settings.local.json` — so `tk sync` runs automatically whenever a Claude Code
+session begins, and the context is never stale. It lives in the per-developer local
+settings (gitignored), so `tk update` never clobbers it and it stays off your teammates'
+machines unless they opt in too.
+
+```bash
+tk quick my-app --stack express --auto-sync
+```
+
 ## Smart defaults that learn from you
 
 tk remembers the choices you make and offers them as defaults next time. Scaffold

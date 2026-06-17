@@ -106,6 +106,41 @@ describe('tk sync — keep CLAUDE.md aligned with real structure', () => {
     expect(managed).not.toContain('Run `tk sync` to populate'); // placeholder replaced
   });
 
+  it('--auto-sync writes a valid SessionStart hook to settings.local.json', async () => {
+    const dir = tmpDir();
+    const proj = join(dir, 'hooked');
+    const { scaffold } = await import('../src/commands/quick/scaffold.js');
+    await scaffold({
+      projectName: 'hooked', description: 'x', stack: 'node-ts',
+      targetDir: proj, includeAi: true, initGit: false, installDeps: false, autoSync: true,
+    });
+
+    const localPath = join(proj, '.claude', 'settings.local.json');
+    expect(existsSync(localPath)).toBe(true);
+    const parsed = JSON.parse(readFileSync(localPath, 'utf-8'));
+    const cmd = parsed.hooks.SessionStart[0].hooks[0];
+    expect(cmd.type).toBe('command');
+    expect(cmd.command).toContain('tk sync');
+
+    // Managed settings.json stays clean (hook is NOT in the tk-managed file).
+    const managedSettings = JSON.parse(readFileSync(join(proj, '.claude', 'settings.json'), 'utf-8'));
+    expect(managedSettings.hooks).toBeUndefined();
+
+    // settings.local.json must be gitignored.
+    expect(readFileSync(join(proj, '.gitignore'), 'utf-8')).toContain('.claude/settings.local.json');
+  });
+
+  it('omits settings.local.json without --auto-sync', async () => {
+    const dir = tmpDir();
+    const proj = join(dir, 'plain');
+    const { scaffold } = await import('../src/commands/quick/scaffold.js');
+    await scaffold({
+      projectName: 'plain', description: 'x', stack: 'node-ts',
+      targetDir: proj, includeAi: true, initGit: false, installDeps: false,
+    });
+    expect(existsSync(join(proj, '.claude', 'settings.local.json'))).toBe(false);
+  });
+
   it('distinguishes FastAPI from plain Python via pyproject.toml', async () => {
     const dir = tmpDir();
     const proj = join(dir, 'svc');

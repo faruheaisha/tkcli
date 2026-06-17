@@ -27,6 +27,27 @@ export interface ScaffoldOptions {
   components?: string[];
   /** Infra addons to include at scaffold time */
   addons?: string[];
+  /** Write a SessionStart hook that auto-runs `tk sync` (into .claude/settings.local.json) */
+  autoSync?: boolean;
+}
+
+/**
+ * The Claude Code SessionStart hook that keeps CLAUDE.md aligned every session.
+ * Lives in settings.local.json (per-developer, gitignored) so `tk update` never clobbers it.
+ * Tries a local `tk` first, falls back to npx, and never fails the session.
+ */
+export function autoSyncLocalSettings(): string {
+  return JSON.stringify({
+    hooks: {
+      SessionStart: [
+        {
+          hooks: [
+            { type: 'command', command: 'tk sync 2>/dev/null || npx -y tkcli sync 2>/dev/null || true' },
+          ],
+        },
+      ],
+    },
+  }, null, 2) + '\n';
 }
 
 export interface TemplateContext {
@@ -212,7 +233,7 @@ export function getInfraModule(id: string): InfraModule | undefined {
 
 export async function scaffold(opts: ScaffoldOptions): Promise<string[]> {
   const startTime = Date.now();
-  const { projectName, targetDir, includeAi, initGit, installDeps: doInstall, dryRun, components, addons } = opts;
+  const { projectName, targetDir, includeAi, initGit, installDeps: doInstall, dryRun, components, addons, autoSync } = opts;
 
   validateInput(opts);
 
@@ -303,6 +324,17 @@ export async function scaffold(opts: ScaffoldOptions): Promise<string[]> {
       // Install deps
       if (doInstall && def?.needsNpmInstall) {
         installDeps(targetDir);
+      }
+    }
+
+    // Opt-in: SessionStart hook that auto-runs `tk sync` (per-developer, gitignored).
+    if (autoSync) {
+      const claudeDir = join(targetDir, '.claude');
+      ensureDir(claudeDir);
+      const localPath = join(claudeDir, 'settings.local.json');
+      if (!existsSync(localPath)) {
+        writeFileSync(localPath, autoSyncLocalSettings(), 'utf-8');
+        createdFiles.push(localPath);
       }
     }
 
