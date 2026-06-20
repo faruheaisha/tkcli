@@ -3,6 +3,10 @@ import { createBrowserRouter } from 'react-router';
 export const router = createBrowserRouter([
   {
     path: '/',
-    lazy: () => import('../pages/Home'),
+    // Code-split the page; react-router expects lazy() to resolve to route props.
+    lazy: async () => {
+      const { default: Component } = await import('../pages/Home');
+      return { Component };
+    },
   },
 ]);
