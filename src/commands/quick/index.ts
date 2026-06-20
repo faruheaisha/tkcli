@@ -16,12 +16,14 @@ export const quickCommand = new Command('quick')
   .option('--addons <list>', 'Infra addons to include (comma-separated: docker,ci,security)')
   .option('--auto-sync', 'Add a Claude Code SessionStart hook that keeps CLAUDE.md synced each session')
   .option('--description <text>', 'Project description')
+  .option('--ai-tool <tools>', 'Select which AI tool context files to generate (comma-separated: claude,cursor,windsurf,copilot). Default: all')
   .option('--no-ai', 'Skip AI context files (CLAUDE.md, .editorconfig)')
   .option('--no-git', 'Skip git initialization')
   .option('--no-install', 'Skip npm/pip install')
   .option('--force', 'Overwrite existing directory')
   .option('--dry-run', 'Preview what would be created without writing files')
   .option('-y, --yes', 'Skip interactive prompts, use defaults')
+  .option('--interactive', 'Show all 6 prompts (default: 3 core prompts, rest use smart defaults)')
   .addHelpText('after', `
 Infra addons (--addons):
   docker     Add Dockerfile + docker-compose.yml
@@ -31,6 +33,7 @@ Infra addons (--addons):
 Example:
   tk quick my-api --stack express                          # Minimal project
   tk quick my-api --stack express --addons docker,ci       # With infra
+  tk quick my-api --stack nextjs --ai-tool claude,cursor  # Only Claude + Cursor rules
 `)
   .action(async (projectName: string | undefined, options: Record<string, unknown>) => {
     try {
@@ -44,6 +47,11 @@ Example:
         ? addonsStr.split(',').map((s: string) => s.trim()).filter(Boolean)
         : undefined;
 
+      const aiToolStr = options.aiTool as string | undefined;
+      const aiTools = aiToolStr
+        ? aiToolStr.split(',').map((s: string) => s.trim()).filter(Boolean)
+        : undefined;
+
       let opts: {
         projectName: string;
         description: string;
@@ -53,6 +61,7 @@ Example:
         installDeps: boolean;
         components: string[] | undefined;
         addons: string[] | undefined;
+        aiTools: string[] | undefined;
       };
 
       // Learned default stack from local usage history (privacy: never transmitted).
@@ -68,6 +77,7 @@ Example:
           installDeps: options.install !== false,
           components,
           addons,
+          aiTools,
         };
       } else if (options.yes) {
         const inferredName = process.cwd().split(/[\\/]/).pop() || 'my-project';
@@ -80,6 +90,7 @@ Example:
           installDeps: options.install !== false,
           components,
           addons,
+          aiTools,
         };
       } else {
         let answersComponents = components;
@@ -93,7 +104,7 @@ Example:
           includeAi: learned.includeAi,
           initGit: learned.initGit,
           installDeps: learned.installDeps,
-        });
+        }, !!options.interactive);
 
         opts = {
           projectName: answers.projectName,
@@ -106,6 +117,7 @@ Example:
           installDeps: options.install !== undefined ? options.install !== false : answers.installDeps,
           components: answersComponents,
           addons,
+          aiTools: options.aiTool !== undefined ? aiTools : answers.aiTools,
         };
       }
 
@@ -116,7 +128,6 @@ Example:
           logger.error(`Directory "${opts.projectName}" already exists and is not empty. Use --force to overwrite.`);
           process.exit(1);
         }
-        logger.warn('Directory exists. Overwriting with --force...');
       }
 
       await scaffold({
@@ -131,6 +142,8 @@ Example:
         components: opts.components,
         addons: opts.addons,
         autoSync: options.autoSync as boolean | undefined,
+        force: options.force as boolean,
+        aiTools: opts.aiTools,
       });
 
       // Learn from this scaffold so future runs default to your habits (local only).

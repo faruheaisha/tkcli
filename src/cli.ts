@@ -7,6 +7,9 @@ import { initCommand } from './commands/init/index.js';
 import { addCommand } from './commands/add/index.js';
 import { updateCommand } from './commands/update/index.js';
 import { syncCommand } from './commands/sync/index.js';
+import { diffCommand } from './commands/diff/index.js';
+import { doctorCommand } from './commands/doctor/index.js';
+import { refreshCommand } from './commands/refresh/index.js';
 import { listCommand } from './commands/list/index.js';
 import { infoCommand } from './commands/info/index.js';
 
@@ -35,6 +38,9 @@ export function createCLI(): Command {
   program.addCommand(addCommand);
   program.addCommand(updateCommand);
   program.addCommand(syncCommand);
+  program.addCommand(diffCommand);
+  program.addCommand(doctorCommand);
+  program.addCommand(refreshCommand);
   program.addCommand(listCommand);
   program.addCommand(infoCommand);
 

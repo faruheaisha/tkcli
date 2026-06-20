@@ -16,6 +16,8 @@ export interface ComposeOptions {
   includeAi: boolean;
   initGit: boolean;
   installDeps: boolean;
+  /** Filter: if set, only copy AI files matching these tool names. */
+  aiFilesFilter?: Set<string> | null;
 }
 
 /**
@@ -51,7 +53,7 @@ export function composeScaffold(opts: ComposeOptions): string[] {
   if (includeAi) {
     const sharedDir = join(templatesDir, 'shared');
     if (existsSync(sharedDir)) {
-      const files = copyTemplates(sharedDir, targetDir, ctx);
+      const files = copyTemplates(sharedDir, targetDir, ctx, opts.aiFilesFilter);
       createdFiles.push(...files);
     }
   }
@@ -70,7 +72,7 @@ export function composeScaffold(opts: ComposeOptions): string[] {
       ensureDir(join(targetDir, testDir));
     }
 
-    const files = copyTemplates(stackDir, targetDir, ctx);
+    const files = copyTemplates(stackDir, targetDir, ctx, opts.aiFilesFilter);
     const relFiles = files.map(f => relative(targetDir, f).replace(/\\/g, '/'));
 
     for (const rel of relFiles) {
@@ -95,8 +97,8 @@ export function composeScaffold(opts: ComposeOptions): string[] {
       if (!existsSync(pkgHbsPath)) continue;
       const raw = readFileSync(pkgHbsPath, 'utf-8');
       const rendered = raw
-        .replace(/\{\{projectName\}\}/g, opts.projectName)
-        .replace(/\{\{description\}\}/g, ctx.description);
+        .replace(/\{\{projectName\}\}/g, () => opts.projectName)
+        .replace(/\{\{description\}\}/g, () => ctx.description);
       let parsed: Record<string, unknown>;
       try { parsed = JSON.parse(rendered); } catch { continue; }
       mergedPkg = mergedPkg ? mergePackageJson(mergedPkg, parsed) : { ...parsed };
@@ -114,9 +116,14 @@ export function composeScaffold(opts: ComposeOptions): string[] {
 
   if (installDeps && hasNpmStack) {
     withSpinner('Installing dependencies...', async () => {
-      execSync('npm install', { cwd: targetDir, stdio: 'pipe', timeout: 120_000 });
-    }).catch(() => {
-      logger.warn('npm install failed. Run it manually later.');
+      try {
+        execSync('npm install', { cwd: targetDir, stdio: 'pipe', timeout: 120_000 });
+      } catch (npmErr: unknown) {
+        const exitInfo = npmErr instanceof Error && 'status' in npmErr ? ` (exit code ${(npmErr as { status: number }).status})` : '';
+        throw new Error(`npm install failed${exitInfo}. Run "cd ${opts.projectName} && npm install" manually.${npmErr instanceof Error ? ` Original: ${npmErr.message.split('\n')[0]}` : ''}`);
+      }
+    }).catch((err: unknown) => {
+      logger.warn(err instanceof Error ? err.message : 'npm install failed.');
     });
   }
 

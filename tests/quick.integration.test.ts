@@ -349,7 +349,7 @@ describe('tk quick --force overwrites existing dir', () => {
   let dir: string;
   beforeEach(() => { dir = tmpDir(); });
 
-  it('overwrites with new description', async () => {
+  it('overwrites with new description when force is true', async () => {
     const { scaffold } = await import('../src/commands/quick/scaffold.js');
     await scaffold({
       projectName: 'force-test',
@@ -368,10 +368,33 @@ describe('tk quick --force overwrites existing dir', () => {
       includeAi: false,
       initGit: false,
       installDeps: false,
+      force: true,
     });
     expect(files.length).toBeGreaterThan(0);
     const pkg = JSON.parse(read(join(dir, 'force-test', 'package.json')));
     expect(pkg.description).toBe('second');
+  });
+
+  it('rejects overwriting existing dir without force', async () => {
+    const { scaffold } = await import('../src/commands/quick/scaffold.js');
+    await scaffold({
+      projectName: 'no-force',
+      description: 'first',
+      stack: 'node-ts',
+      targetDir: join(dir, 'no-force'),
+      includeAi: false,
+      initGit: false,
+      installDeps: false,
+    });
+    await expect(scaffold({
+      projectName: 'no-force',
+      description: 'second',
+      stack: 'node-ts',
+      targetDir: join(dir, 'no-force'),
+      includeAi: false,
+      initGit: false,
+      installDeps: false,
+    })).rejects.toThrow(/already exists/);
   });
 });
 

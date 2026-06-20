@@ -1,6 +1,6 @@
 import Handlebars from 'handlebars';
 import { readFileSync, existsSync, readdirSync, statSync, writeFileSync, rmSync } from 'fs';
-import { join, dirname, extname, normalize } from 'path';
+import { join, dirname, extname, normalize, sep } from 'path';
 import { fileURLToPath } from 'url';
 import { execSync, ExecSyncOptions } from 'child_process';
 import { ensureDir } from '../../utils/fs.js';
@@ -13,7 +13,47 @@ import { composeScaffold } from './composer.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+/** Safe path-prefix check: prevents traversal via sibling directories that
+ *  share a prefix (e.g. /projects/my-app bypassing /projects/my-app). */
+function isWithin(child: string, parent: string): boolean {
+  const safeParent = parent.endsWith(sep) ? parent : parent + sep;
+  return child.startsWith(safeParent) || child === parent;
+}
+
 export const ALLOWED_STACK_IDS = new Set(STACKS.map((s) => s.id));
+
+/**
+ * AI tool presets — each maps to the IDE-specific rule files that tool reads.
+ * `--ai-tool` selects which of these to keep. AGENTS.md is portable (Codex, opencode,
+ * …) and the project code itself are always generated regardless of the selection.
+ */
+export const AI_TOOL_DEFS: Record<string, { label: string; files: string[] }> = {
+  claude:  { label: 'Claude Code',  files: ['CLAUDE.md', '.claude/settings.json'] },
+  cursor:  { label: 'Cursor',       files: ['.cursorrules'] },
+  windsurf:{ label: 'Windsurf',     files: ['.windsurfrules'] },
+  copilot: { label: 'GitHub Copilot', files: ['.github/copilot-instructions.md'] },
+};
+
+/**
+ * Resolve `--ai-tool` values to the set of tool-specific files to EXCLUDE (those
+ * belonging to tools the user did NOT pick). Returns null when no filter is needed.
+ * A deny-list — never the project code — so package.json/src/tests always survive.
+ */
+export function resolveAiTools(aiTools?: string[]): Set<string> | null {
+  if (!aiTools || aiTools.length === 0) return null; // no filter = include everything
+  for (const tool of aiTools) {
+    if (!AI_TOOL_DEFS[tool]) {
+      throw new Error(`Unknown AI tool "${tool}". Allowed: ${Object.keys(AI_TOOL_DEFS).join(', ')}`);
+    }
+  }
+  const selected = new Set(aiTools);
+  const excluded = new Set<string>();
+  for (const [tool, def] of Object.entries(AI_TOOL_DEFS)) {
+    if (selected.has(tool)) continue;
+    for (const f of def.files) excluded.add(f);
+  }
+  return excluded;
+}
 
 export interface ScaffoldOptions {
   projectName: string;
@@ -29,6 +69,10 @@ export interface ScaffoldOptions {
   addons?: string[];
   /** Write a SessionStart hook that auto-runs `tk sync` (into .claude/settings.local.json) */
   autoSync?: boolean;
+  /** Allow overwriting an existing non-empty target directory */
+  force?: boolean;
+  /** Select which AI tool context files to generate (claude,cursor,windsurf,copilot). Default: all. */
+  aiTools?: string[];
 }
 
 /**
@@ -42,7 +86,9 @@ export function autoSyncLocalSettings(): string {
       SessionStart: [
         {
           hooks: [
-            { type: 'command', command: 'tk sync 2>/dev/null || npx -y tkcli sync 2>/dev/null || true' },
+            // Only use locally-installed tk; npx fallback removed to avoid
+            // auto-downloading code on every session start (supply-chain risk).
+            { type: 'command', command: 'tk sync 2>/dev/null || true' },
           ],
         },
       ],
@@ -88,8 +134,11 @@ export function renderContent(content: string, ctx: TemplateContext): string {
   return Handlebars.compile(content)(ctx);
 }
 
-/** Walk a template directory, copying files and rendering .hbs. Returns created file paths. */
-export function copyTemplates(srcDir: string, destDir: string, ctx: TemplateContext): string[] {
+/** Walk a template directory, copying files and rendering .hbs. Returns created file paths.
+ *  If `excludedFiles` is provided, files matching it (by name or parent/name suffix) are
+ *  skipped — used by `--ai-tool` to drop unselected tools' rule files. Project code and
+ *  AGENTS.md are never in this set, so they always survive. */
+export function copyTemplates(srcDir: string, destDir: string, ctx: TemplateContext, excludedFiles?: Set<string> | null): string[] {
   const resolvedDest = normalize(destDir);
   const entries = readdirSync(srcDir);
   const created: string[] = [];
@@ -101,15 +150,27 @@ export function copyTemplates(srcDir: string, destDir: string, ctx: TemplateCont
     if (stat.isDirectory()) {
       const subDest = join(resolvedDest, entry);
       ensureDir(subDest);
-      const subFiles = copyTemplates(srcPath, subDest, ctx);
+      const subFiles = copyTemplates(srcPath, subDest, ctx, excludedFiles);
       created.push(...subFiles);
     } else if (stat.isFile()) {
       const isHbs = extname(entry) === '.hbs';
       const destName = isHbs ? entry.slice(0, -4) : entry;
+
+      // Skip files belonging to an unselected AI tool. Match the bare filename or
+      // any excluded path whose final segment equals this file (e.g. .claude/settings.json).
+      if (excludedFiles) {
+        let excluded = excludedFiles.has(destName);
+        if (!excluded) {
+          for (const ex of excludedFiles) {
+            if (ex.endsWith('/' + destName)) { excluded = true; break; }
+          }
+        }
+        if (excluded) continue;
+      }
       const content = readFileSync(srcPath, 'utf-8');
       const final = isHbs ? renderContent(content, ctx) : content;
       const destPath = join(resolvedDest, destName);
-      if (!destPath.startsWith(resolvedDest)) {
+      if (!isWithin(destPath, resolvedDest)) {
         throw new Error(`Path traversal detected: ${destPath} is outside ${resolvedDest}`);
       }
       const parent = dirname(destPath);
@@ -155,11 +216,16 @@ export function gitInit(targetDir: string): void {
   }
 }
 
-function installDeps(targetDir: string): void {
+function installDeps(targetDir: string, projectName: string): void {
   withSpinner('Installing dependencies...', async () => {
-    execSync('npm install', { cwd: targetDir, stdio: 'pipe', timeout: 120_000 });
-  }).catch(() => {
-    logger.warn('npm install failed. Run it manually later.');
+    try {
+      execSync('npm install', { cwd: targetDir, stdio: 'pipe', timeout: 120_000 });
+    } catch (npmErr: unknown) {
+      const exitInfo = npmErr instanceof Error && 'status' in npmErr ? ` (exit code ${(npmErr as { status: number }).status})` : '';
+      throw new Error(`npm install failed${exitInfo}. Run "cd ${projectName} && npm install" manually.${npmErr instanceof Error ? ` Original: ${npmErr.message.split('\n')[0]}` : ''}`);
+    }
+  }).catch((err: unknown) => {
+    logger.warn(err instanceof Error ? err.message : 'npm install failed.');
   });
 }
 
@@ -202,7 +268,9 @@ export function copyInfraModule(moduleDir: string, targetDir: string, ctx: Templ
     const content = readFileSync(srcPath, 'utf-8');
     const final = isHbs ? renderContent(content, ctx) : content;
     const destPath = join(resolvedDest, destName);
-    if (!destPath.startsWith(resolvedDest)) continue;
+    if (!isWithin(destPath, resolvedDest)) {
+      throw new Error(`Path traversal detected: ${destPath} is outside ${resolvedDest}`);
+    }
 
     const parent = dirname(destPath);
     if (parent !== resolvedDest) ensureDir(parent);
@@ -237,11 +305,15 @@ export async function scaffold(opts: ScaffoldOptions): Promise<string[]> {
 
   validateInput(opts);
 
+  const aiFilesFilter = resolveAiTools(opts.aiTools);
   const createdFiles: string[] = [];
 
   if (dryRun) {
     logger.info(`[dry-run] Would create project "${projectName}" in ${targetDir}`);
     logger.info(`[dry-run] Stack: ${opts.stack}, AI context: ${includeAi}, Git: ${initGit}, Install: ${doInstall}`);
+    if (aiFilesFilter) {
+      logger.info(`[dry-run] AI tools: ${opts.aiTools!.join(', ')}`);
+    }
     const templatesDir = findTemplatesDir();
     const stackDir = join(templatesDir, opts.stack);
     if (existsSync(stackDir)) {
@@ -253,6 +325,12 @@ export async function scaffold(opts: ScaffoldOptions): Promise<string[]> {
   logger.headline(`✦ Creating ${projectName}...`);
 
   if (existsSync(targetDir)) {
+    if (!opts.force) {
+      throw new Error(
+        `Directory "${projectName}" already exists. Use --force to overwrite, or choose a different name.`,
+      );
+    }
+    logger.warn('Overwriting existing directory with --force...');
     rmSync(targetDir, { recursive: true, force: true });
   }
 
@@ -274,6 +352,7 @@ export async function scaffold(opts: ScaffoldOptions): Promise<string[]> {
         includeAi,
         initGit,
         installDeps: doInstall,
+        aiFilesFilter,
       });
       createdFiles.push(...composeFiles);
     } else {
@@ -290,7 +369,7 @@ export async function scaffold(opts: ScaffoldOptions): Promise<string[]> {
       if (includeAi) {
         const sharedDir = join(templatesDir, 'shared');
         if (existsSync(sharedDir)) {
-          const files = copyTemplates(sharedDir, targetDir, ctx);
+          const files = copyTemplates(sharedDir, targetDir, ctx, aiFilesFilter);
           createdFiles.push(...files);
         }
       }
@@ -298,7 +377,7 @@ export async function scaffold(opts: ScaffoldOptions): Promise<string[]> {
       // Render stack templates
       const stackDir = join(templatesDir, opts.stack);
       if (existsSync(stackDir)) {
-        const files = copyTemplates(stackDir, targetDir, ctx);
+        const files = copyTemplates(stackDir, targetDir, ctx, aiFilesFilter);
         createdFiles.push(...files);
       }
 
@@ -323,7 +402,7 @@ export async function scaffold(opts: ScaffoldOptions): Promise<string[]> {
 
       // Install deps
       if (doInstall && def?.needsNpmInstall) {
-        installDeps(targetDir);
+        installDeps(targetDir, projectName);
       }
     }
 
@@ -347,12 +426,24 @@ export async function scaffold(opts: ScaffoldOptions): Promise<string[]> {
     }
     const devHint = getDevCommand(opts.stack);
     if (devHint) logger.dim(`  ${devHint}`);
+    // Educational hints — show useful next steps at the moment of highest attention
+    if (includeAi) {
+      logger.dim(`  Run 'tk sync' anytime to refresh CLAUDE.md after structural changes`);
+    }
+    logger.dim(`  Tip: use -y to skip prompts next time, e.g. tk quick app --stack express -y`);
 
     return createdFiles;
   } catch (err) {
-    // Rollback: clean up any partial files
-    if (existsSync(targetDir)) {
-      rmSync(targetDir, { recursive: true, force: true });
+    // Rollback: clean up partial files, but preserve the original error
+    // if rollback itself fails.
+    try {
+      if (existsSync(targetDir)) {
+        rmSync(targetDir, { recursive: true, force: true });
+      }
+    } catch (rollbackErr) {
+      // Intentionally swallow rollback error so the original scaffold
+      // error (the root cause) propagates to the caller.
+      logger.warn(`Rollback failed — partial files may remain in ${targetDir}: ${rollbackErr instanceof Error ? rollbackErr.message : String(rollbackErr)}`);
     }
     throw err;
   }

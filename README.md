@@ -1,25 +1,47 @@
-# tk — Project Harness Generator for AI-Assisted Development
+# tk — AI Context Generator for Developer Projects
 
-> `npx tkcli quick my-app --stack nextjs` — 14 stacks. Multi-stack composition. Per-stack AI context. One command.
+> `npx tkcli quick my-app --stack nextjs` generates your project AND all AI agent context files in one command.
 
-You just scaffolded a project. Now your AI agent needs to know how to work with it. Language? Framework? Build tool? Test runner? Error handling style? Conventions?
+You just scaffolded a project. Now your AI agent needs to know how to work with it — language, framework, build tool, test runner, conventions. Instead of explaining this every session, **tk generates the context files** that make AI assistants effective from the start.
 
-Instead of telling it every time, **tk generates the harness** — CLAUDE.md, AGENTS.md, .cursorrules, .windsurfrules, .claude/settings.json, copilot-instructions, .gitignore, .editorconfig — all specific to your stack. Your AI agent picks it up from the first `cd` command.
+## Why tk exists
 
-## When to use tk
+AI coding agents (Claude Code, Cursor, Copilot, Windsurf) need project context to be useful. Without it, they hallucinate configs, use wrong conventions, and ask you the same questions every session. tk solves this by generating stack-specific context files that tell your AI agent exactly how your project works.
 
-- **Starting a new project** and want AI-assisted development that works out of the box
-- **Working across multiple tech stacks** — tk is the only tool with 14 stack templates and multi-stack composition
-- **Need to generate a fullstack app** — `tk quick app --stack nextjs --components express` merges both stacks into one project
-- **Adding AI context to an existing project** — `tk init` detects the stack and injects config files
+**The key insight: tk doesn't just scaffold — it keeps context in sync.** If you add a new directory or change your scripts, `tk sync` (or `tk refresh`) updates the managed region of CLAUDE.md, while never touching your own notes.
 
 ## Quick Start
 
 ```bash
-tk quick                                    # Interactive (6-step guided prompt)
+tk quick                                    # 3-step guided prompt
 tk quick my-api --stack fastapi             # One-shot
 tk quick my-api --stack express --addons docker,ci   # With infra
+tk quick my-app --stack nextjs --ai-tool claude,cursor  # Only Claude + Cursor rules
 tk quick my-api --dry-run                   # Preview before writing
+```
+
+## What you get
+
+```
+my-app/
+├── src/                     # Source code (stack-specific layout)
+├── tests/                   # Tests
+├── CLAUDE.md                # Split: managed region (auto-synced) + user notes (never overwritten)
+├── AGENTS.md                # Agent operating instructions
+├── .cursorrules             # Cursor AI rules (per-stack)
+├── .windsurfrules           # Windsurf AI rules (per-stack)
+├── .claude/settings.json    # Claude Code settings with per-stack permissions
+├── .github/copilot-instructions.md  # GitHub Copilot context
+├── .gitignore               # Language-appropriate ignores
+├── .editorconfig            # Cross-editor consistency
+└── package.json / Cargo.toml / pyproject.toml / pubspec.yaml / go.mod
+```
+
+Use `--ai-tool` to generate only the files you need:
+```bash
+tk quick my-app --stack express --ai-tool claude    # Only CLAUDE.md + .claude/settings.json
+tk quick my-app --stack express --ai-tool cursor     # Only .cursorrules
+tk quick my-app --stack express --ai-tool claude,copilot  # Multiple tools
 ```
 
 ## Stacks (14)
@@ -37,70 +59,32 @@ tk quick my-api --dry-run                   # Preview before writing
 | `go` | `go run ./cmd/server` | Go microservices |
 | `flutter` | `flutter run` | Cross-platform mobile |
 | `cli-ts` | `npm run dev -- hello` | TypeScript CLI tools |
-| `mcp-server` | `npm run dev` | Model Context Protocol servers (TS SDK, stdio) |
+| `mcp-server` | `npm run dev` | Model Context Protocol servers |
 | `python` | `python src/main.py` | Python scripts/libs |
-
-## What you get with `tk quick`
-
-```
-my-app/
-├── src/                     # Source code (stack-specific layout)
-├── tests/                   # Tests (Vitest, pytest, cargo test, etc.)
-├── CLAUDE.md                # Project identity for AI agents
-├── AGENTS.md                # Agent operating instructions (commands, conventions)
-├── .cursorrules             # Cursor AI rules (per-stack)
-├── .windsurfrules           # Windsurf AI rules (per-stack)
-├── .claude/settings.json    # Claude Code settings
-├── .github/copilot-instructions.md  # GitHub Copilot context
-├── .gitignore               # Language-appropriate ignores
-├── .editorconfig            # Cross-editor consistency
-└── package.json / Cargo.toml / pyproject.toml / pubspec.yaml / go.mod
-```
-
-## Compared to Alternatives
-
-| Tool | Stacks | AI Harness | Multi-Stack | Per-Stack IDE Rules |
-|------|--------|-----------|-------------|-------------------|
-| **tkcli** | **14** | **CLAUDE.md + AGENTS.md + .cursorrules + .windsurfrules + .claude/settings.json + copilot-instructions** | **`--components`** | **Yes** |
-| create-next-app | 1 | — | — | — |
-| create-vite | 4 | — | — | — |
-| Context Forge | — | CLAUDE.md + .claude/ surface | — | — |
-| create-arthus-harness | — | CLAUDE.md + .claude/ surface | — | — |
-
-## Features
-
-- **14 stack templates** — from Rust to Flutter, each with AI config tuned to the stack
-- **Multi-stack composition** — `tk quick app --stack nextjs --components express` merges stacks
-- **Per-stack IDE rules** — `.cursorrules` and `.windsurfrules` differ by stack (not one-size-fits-all)
-- **`.claude/settings.json`** — valid Claude Code config with per-stack tailored permissions (a node project never ships cargo/flutter rules)
-- **copilot-instructions.md** — GitHub Copilot context matching the stack
-- **Infra addons** — `--addons docker,ci,security` for Dockerfile, CI workflow, gitleaks
-- **`tk init`** — add AI context to existing projects (auto-detects stack)
-- **`tk add`** — add module to existing project incrementally
-- **`tk update`** — re-render AI context files without touching your code
-- **`--dry-run`** — preview before writing
-- **`-y` / `--yes`** — skip prompts when you know what you want
 
 ## Commands
 
 ```
-tk quick [name]   Scaffold a project
-tk init           Add AI context files to an existing project (auto-syncs structure)
-tk add <module>   Add a component/infra module
-tk update         Re-render AI context files (preserves your Project Notes)
-tk sync           Refresh CLAUDE.md to match the project's real structure
-tk list           List all available stacks and infra modules
-tk info           Show version and system info
+tk quick [name]          Scaffold a project (3 core prompts, smart defaults for the rest)
+tk quick [name] --interactive   Full 6-step interactive prompt
+tk init                  Add AI context files to an existing project
+tk add <module>          Add a component/infra module
+tk update                Re-render AI context files (preserves your notes)
+tk sync                  Refresh CLAUDE.md managed region from real project structure
+tk refresh               Update templates + sync structure (update + sync combined)
+tk diff                  Preview what tk update would change
+tk doctor                Diagnose common issues with tk-managed projects
+tk list                  List all available stacks and infra modules
+tk info                  Show version and system info
 ```
 
-## Keeping context in sync
+## Context that stays in sync
 
-tk doesn't just generate context once and walk away — it maintains it. Generated
-`CLAUDE.md` files are split into two regions:
+`CLAUDE.md` is split into two regions:
 
 ```markdown
-<!-- tk:managed:start -->   ← tk sync regenerates this from your real files
-**Stack:** … · **Dev:** … · **Test:** …
+<!-- tk:managed:start -->   ← tk sync/tk refresh regenerates this from your real project
+**Stack:** nextjs · **Dev:** npm run dev · **Test:** npm test
 ## Commands          (scanned from package.json scripts)
 ## Project Structure (scanned from the actual directory tree)
 <!-- tk:managed:end -->
@@ -111,29 +95,43 @@ tk doesn't just generate context once and walk away — it maintains it. Generat
 <!-- tk:user:end -->
 ```
 
-Run `tk sync` anytime your project structure changes and the managed region updates
-to reflect reality — so your AI agent never reads a stale or hallucinated layout.
-Your Project Notes are always preserved.
+Run `tk refresh` anytime your project structure changes. The managed region updates to reflect reality — your AI agent never reads a stale layout. Your Project Notes are always preserved.
 
 ### Auto-sync every session (opt-in)
-
-Pass `--auto-sync` to `tk quick` and tk drops a Claude Code **SessionStart hook** into
-`.claude/settings.local.json` — so `tk sync` runs automatically whenever a Claude Code
-session begins, and the context is never stale. It lives in the per-developer local
-settings (gitignored), so `tk update` never clobbers it and it stays off your teammates'
-machines unless they opt in too.
 
 ```bash
 tk quick my-app --stack express --auto-sync
 ```
 
-## Smart defaults that learn from you
+Drops a Claude Code **SessionStart hook** into `.claude/settings.local.json` — `tk sync` runs automatically every session. Per-developer (gitignored), so teammates opt in independently.
 
-tk remembers the choices you make and offers them as defaults next time. Scaffold
-Express a few times and `tk quick` will default to Express; keep skipping `npm install`
-and it stops asking. This lives in a local `~/.config/toolkit/profile.json` — it is
-**never transmitted anywhere**. Delete the file to reset, or pass explicit flags
-(`--stack`, `--no-install`, …) to override the learned defaults anytime.
+## Diagnose issues
+
+```bash
+tk doctor
+```
+
+Checks: CLAUDE.md region markers, stack detection, .claude/settings.json validity, .gitignore coverage, auto-sync hook, git repository.
+
+## Compared to alternatives
+
+| Tool | What it does | AI context files | Stacks | Keep-in-sync |
+|------|-------------|-------------------|--------|-------------|
+| **tk** | Scaffold + AI context generation | 6 formats, per-stack permissions | 14 | `tk sync` / `tk refresh` |
+| Yeoman | Project scaffolding (2000+ generators) | None | 2000+ | No |
+| Cookiecutter | Cross-language templates | None | 1400+ | No |
+| Plop | Micro-generator framework | None | DIY | No |
+| Hygen | In-project generators | None | DIY | No |
+| create-next-app | Next.js-only scaffold | None | 1 | No |
+| Context Forge | CLAUDE.md generator only | CLAUDE.md + .claude/ | — | No |
+
+**What tk does differently:** Yeoman/Cookiecutter/Plop generate projects; tk makes those projects AI-native. The `tk sync` / `tk refresh` mechanism keeps context accurate as your project evolves — something no other tool does.
+
+**What tk doesn't do (yet):** Custom template directories, monorepo support, community template ecosystem, team-shared config.
+
+## Smart defaults
+
+tk learns from your usage and offers smarter defaults over time. Scaffold Express a few times and it becomes the default. Lives in `~/.config/toolkit/profile.json` — never transmitted.
 
 ## Install
 

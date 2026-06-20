@@ -2,3 +2,9 @@ node_modules/
 dist/
 .env
 *.local
+
+# local npm caches / pack output / CI scaffold dirs
+npm-cache/
+_npmcache*/
+*.tgz
+out-*/

@@ -11,6 +11,9 @@ export const listCommand = new Command('list')
     console.log('  add       Add a component or infra module to an existing project');
     console.log('  update    Re-render AI context files in an existing project');
     console.log('  sync      Refresh CLAUDE.md to match the project\'s real structure');
+    console.log('  refresh   Update templates + sync structure (update + sync combined)');
+    console.log('  diff      Preview what tk update would change');
+    console.log('  doctor    Diagnose common issues with tk-managed projects');
     console.log('  list      Show this command list');
     console.log('  info      Show system and version information');
 
