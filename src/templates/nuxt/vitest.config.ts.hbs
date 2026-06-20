@@ -1,0 +1,9 @@
+import { defineVitestConfig } from '@nuxt/test-utils/config';
+
+// Runs tests inside a real Nuxt environment so auto-imports (useAsyncData,
+// definePageMeta, NuxtLink, …) and components resolve correctly.
+export default defineVitestConfig({
+  test: {
+    environment: 'nuxt',
+  },
+});
