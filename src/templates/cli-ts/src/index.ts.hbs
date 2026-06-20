@@ -35,4 +35,9 @@ program
     console.log(chalk.cyan(`Words: ${text.split(/\s+/).filter(Boolean).length}`));
   });
 
+// No subcommand given → print help to stderr and exit non-zero (CI-friendly).
+if (process.argv.length <= 2) {
+  program.help({ error: true });
+}
+
 program.parse(process.argv);

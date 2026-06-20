@@ -21,12 +21,13 @@ jobs:
       - run: npm run build
       - run: npm test
 
-  # Prove the scaffolded code of representative npm stacks actually installs and builds.
+  # Prove the scaffolded code of every npm stack actually installs, builds, and tests.
   scaffold-build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        stack: [node-ts, cli-ts, mcp-server, express, react-spa]
+        stack: [node-ts, cli-ts, mcp-server, express, react-spa, vue, nuxt, nextjs]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
