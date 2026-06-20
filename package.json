@@ -4,7 +4,7 @@
   "description": "Project harness generator for AI-assisted development — scaffold, compose, and configure across 14 stacks",
   "type": "module",
   "bin": {
-    "tk": "./dist/index.js"
+    "tk": "dist/index.js"
   },
   "files": [
     "dist/",
@@ -20,7 +20,13 @@
     "test:watch": "vitest",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["cli", "scaffold", "ai", "toolkit", "developer-tools"],
+  "keywords": [
+    "cli",
+    "scaffold",
+    "ai",
+    "toolkit",
+    "developer-tools"
+  ],
   "license": "MIT",
   "dependencies": {
     "chalk": "^5.4.1",
