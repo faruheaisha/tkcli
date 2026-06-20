@@ -1,3 +1,6 @@
+<!-- language switcher -->
+**English** | [简体中文](README.zh.md)
+
 # tk — AI Context Generator for Developer Projects
 
 > `npx tkcli quick my-app --stack nextjs` generates your project AND all AI agent context files in one command.

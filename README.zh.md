@@ -1,3 +1,6 @@
+<!-- language switcher -->
+[English](README.md) | **简体中文**
+
 # tk — AI 上下文生成器
 
 > `npx tkcli quick my-app --stack nextjs` 一行命令生成项目 + 所有 AI Agent 上下文文件。
