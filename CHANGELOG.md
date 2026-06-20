@@ -32,9 +32,9 @@ project changes. tk treats AI context as something to *maintain*.
 ### Install
 
 ```bash
-npm install -g tkcli
+npm install -g @faruhe/tkcli
 # or
-npx tkcli quick my-app --stack mcp-server
+npx @faruhe/tkcli quick my-app --stack mcp-server
 ```
 
 Node >= 20.

@@ -3,7 +3,7 @@
 
 # tk — AI Context Generator for Developer Projects
 
-> `npx tkcli quick my-app --stack nextjs` generates your project AND all AI agent context files in one command.
+> `npx @faruhe/tkcli quick my-app --stack nextjs` generates your project AND all AI agent context files in one command.
 
 You just scaffolded a project. Now your AI agent needs to know how to work with it — language, framework, build tool, test runner, conventions. Instead of explaining this every session, **tk generates the context files** that make AI assistants effective from the start.
 
@@ -139,8 +139,8 @@ tk learns from your usage and offers smarter defaults over time. Scaffold Expres
 ## Install
 
 ```bash
-npm install -g tkcli
-npx tkcli quick my-app
+npm install -g @faruhe/tkcli
+npx @faruhe/tkcli quick my-app
 ```
 
 Node >= 20.

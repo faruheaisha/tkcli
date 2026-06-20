@@ -1,6 +1,9 @@
 {
-  "name": "tkcli",
+  "name": "@faruhe/tkcli",
   "version": "0.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Project harness generator for AI-assisted development — scaffold, compose, and configure across 14 stacks",
   "type": "module",
   "bin": {
