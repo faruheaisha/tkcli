@@ -5,5 +5,8 @@ export default defineConfig({
   esbuild: { jsx: 'automatic' },
   test: {
     environment: 'jsdom',
+    // Enables @testing-library/react's automatic DOM cleanup between tests,
+    // so repeated render() calls don't accumulate and cause duplicate matches.
+    globals: true,
   },
 });
