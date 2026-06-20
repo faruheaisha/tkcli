@@ -4,8 +4,18 @@
   "publishConfig": {
     "access": "public"
   },
-  "description": "Project harness generator for AI-assisted development — scaffold, compose, and configure across 14 stacks",
+  "description": "Scaffold 14 stacks with AI coding context (CLAUDE.md, AGENTS.md, Cursor/Windsurf/Copilot rules) and keep it in sync as the project evolves.",
   "type": "module",
+  "author": "faruhe",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/faruheaisha/tkcli.git"
+  },
+  "homepage": "https://github.com/faruheaisha/tkcli#readme",
+  "bugs": {
+    "url": "https://github.com/faruheaisha/tkcli/issues"
+  },
   "bin": {
     "tk": "dist/index.js"
   },
@@ -26,11 +36,16 @@
   "keywords": [
     "cli",
     "scaffold",
+    "boilerplate",
     "ai",
-    "toolkit",
+    "claude-code",
+    "agents-md",
+    "cursor",
+    "copilot",
+    "mcp",
+    "code-generator",
     "developer-tools"
   ],
-  "license": "MIT",
   "dependencies": {
     "chalk": "^5.4.1",
     "commander": "^13.1.0",

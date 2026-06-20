@@ -3,6 +3,11 @@
 
 # tk — AI Context Generator for Developer Projects
 
+[![CI](https://github.com/faruheaisha/tkcli/actions/workflows/ci.yml/badge.svg)](https://github.com/faruheaisha/tkcli/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@faruhe/tkcli.svg)](https://www.npmjs.com/package/@faruhe/tkcli)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![node](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org)
+
 > `npx @faruhe/tkcli quick my-app --stack nextjs` generates your project AND all AI agent context files in one command.
 
 You just scaffolded a project. Now your AI agent needs to know how to work with it — language, framework, build tool, test runner, conventions. Instead of explaining this every session, **tk generates the context files** that make AI assistants effective from the start.

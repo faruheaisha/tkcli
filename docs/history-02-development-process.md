@@ -273,7 +273,7 @@ Palmer 要求 tk 对标 6 个竞争对手的模板，逐项打分：
 
 ### 关键修复
 
-1. **npm 包名冲突**：`tk` → `tkcli`（npm 上有同名的 `tk` 包）
+1. **npm 包名冲突**：`tk` → `@faruhe/tkcli`（`tk` 已被占用，`tkcli` 与 `tk-cli` 太相似被拒，故用 scope）
 2. **没有 .claude/settings.json**：加入 Claude Code 权限配置
 3. **没有 copilot-instructions.md**：加入 GitHub Copilot 支持
 4. **tk update 假更新**：内容感知 diff
@@ -379,7 +379,7 @@ Palmer 要求 tk 对标 6 个竞争对手的模板，逐项打分：
 | 代码行数 | ~3000 行 TypeScript |
 | 依赖数 | 4（commander / handlebars / inquirer / chalk） |
 | 外部依赖 | 0 个 AI 或云服务 |
-| 包名 | tkcli（npm published） |
+| 包名 | @faruhe/tkcli |
 
 ### 已完成的核心里程碑
 

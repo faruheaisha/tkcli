@@ -3,6 +3,11 @@
 
 # tk — AI 上下文生成器
 
+[![CI](https://github.com/faruheaisha/tkcli/actions/workflows/ci.yml/badge.svg)](https://github.com/faruheaisha/tkcli/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@faruhe/tkcli.svg)](https://www.npmjs.com/package/@faruhe/tkcli)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![node](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org)
+
 > `npx @faruhe/tkcli quick my-app --stack nextjs` 一行命令生成项目 + 所有 AI Agent 上下文文件。
 
 刚搭好一个新项目，你的 AI Agent 需要知道怎么配合它——语言、框架、构建工具、测试框架、编码规范。每次会话都要重新解释一遍？**tk 替你生成这些上下文文件**，让 AI 助手从第一秒就开始有效工作。
