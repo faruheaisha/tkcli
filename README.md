@@ -8,6 +8,10 @@
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![node](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org)
 
+<p align="center">
+  <img src="assets/tkcli-card.svg" alt="tk keeps CLAUDE.md in sync — stale before, accurate after tk sync" width="820">
+</p>
+
 > `npx @faruhe/tkcli quick my-app --stack nextjs` generates your project AND all AI agent context files in one command.
 
 You just scaffolded a project. Now your AI agent needs to know how to work with it — language, framework, build tool, test runner, conventions. Instead of explaining this every session, **tk generates the context files** that make AI assistants effective from the start.

@@ -1,0 +1,45 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
+  <title>tk keeps CLAUDE.md in sync — before and after tk sync</title>
+  <desc>Left panel: a stale CLAUDE.md listing directories that no longer exist, so the AI reads a layout that's gone. Right panel: after running tk sync, the structure matches the real files. Footer: npx @faruhe/tkcli.</desc>
+
+  <rect width="1200" height="630" fill="#1A1714"/>
+  <rect x="0" y="0" width="1200" height="6" fill="#CC785C"/>
+
+  <text x="60" y="86" font-size="44" font-weight="700" fill="#EDEAE2">Your CLAUDE.md is lying to your AI.</text>
+  <text x="60" y="126" font-size="21" fill="#9A938A">Most tools generate it once — then it rots the moment your project changes.</text>
+
+  <rect x="60" y="168" width="478" height="320" rx="14" fill="#221E19" stroke="#3A332B" stroke-width="1"/>
+  <rect x="84" y="192" width="92" height="28" rx="14" fill="#D9694A"/>
+  <text x="130" y="211" font-size="14" font-weight="700" fill="#1A1714" text-anchor="middle" letter-spacing="1">STALE</text>
+  <text x="190" y="212" font-size="15" fill="#9A938A">generated once, never updated</text>
+
+  <text x="84" y="262" font-family="'Consolas','SF Mono',monospace" font-size="18" fill="#7E7568"># Project Structure</text>
+  <text x="84" y="292" font-family="'Consolas','SF Mono',monospace" font-size="18" fill="#C9C3B8">src/</text>
+  <text x="84" y="318" font-family="'Consolas','SF Mono',monospace" font-size="18" fill="#C9C3B8">├── controllers/</text>
+  <text x="84" y="344" font-family="'Consolas','SF Mono',monospace" font-size="18" fill="#C9C3B8">├── services/</text>
+  <text x="84" y="370" font-family="'Consolas','SF Mono',monospace" font-size="18" fill="#C9C3B8">└── models/</text>
+  <text x="84" y="430" font-size="16" fill="#D9694A">✗ none of these exist anymore</text>
+  <text x="84" y="456" font-size="16" fill="#8A8278">Your agent codes against a ghost.</text>
+
+  <rect x="662" y="168" width="478" height="320" rx="14" fill="#221E19" stroke="#3A332B" stroke-width="1"/>
+  <rect x="686" y="192" width="104" height="28" rx="14" fill="#6FB58A"/>
+  <text x="738" y="211" font-size="14" font-weight="700" fill="#1A1714" text-anchor="middle" letter-spacing="1">IN SYNC</text>
+  <text x="804" y="212" font-size="15" fill="#9A938A">scanned from real files</text>
+
+  <text x="686" y="262" font-family="'Consolas','SF Mono',monospace" font-size="18" fill="#7E7568"># Project Structure</text>
+  <text x="686" y="292" font-family="'Consolas','SF Mono',monospace" font-size="18" fill="#C9C3B8">src/</text>
+  <text x="686" y="318" font-family="'Consolas','SF Mono',monospace" font-size="18" fill="#C9C3B8">├── routes/</text>
+  <text x="686" y="344" font-family="'Consolas','SF Mono',monospace" font-size="18" fill="#C9C3B8">├── services/</text>
+  <text x="686" y="370" font-family="'Consolas','SF Mono',monospace" font-size="18" fill="#C9C3B8">└── index.ts</text>
+  <text x="686" y="430" font-size="16" fill="#6FB58A">✓ always matches reality</text>
+  <text x="686" y="456" font-size="16" fill="#8A8278">Your notes stay untouched.</text>
+
+  <rect x="524" y="302" width="152" height="52" rx="26" fill="#CC785C"/>
+  <text x="600" y="335" font-size="20" font-weight="700" fill="#1A1714" text-anchor="middle" font-family="'Consolas','SF Mono',monospace">tk sync →</text>
+
+  <line x1="60" y1="536" x2="1140" y2="536" stroke="#2E2820" stroke-width="1"/>
+  <text x="60" y="586" font-size="34" font-weight="800" fill="#CC785C">tk</text>
+  <text x="108" y="586" font-size="22" font-weight="600" fill="#EDEAE2" font-family="'Consolas','SF Mono',monospace">npx @faruhe/tkcli</text>
+  <text x="1140" y="580" font-size="16" fill="#9A938A" text-anchor="end">AI context that stays in sync</text>
+  <text x="1140" y="602" font-size="16" fill="#7E7568" text-anchor="end">14 stacks · CLAUDE.md · AGENTS.md · Cursor · MCP</text>
+</svg>
